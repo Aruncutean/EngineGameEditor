@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="EditorAvalonia.views.editor.AssetsView"
+			 xmlns:vm="clr-namespace:EditorAvalonia.viewmodels"
+			 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+	         x:DataType="vm:AssetsViewModel"
+             >
+	<TabControl TabStripPlacement="Left">
+		<TabControl.Styles>
+			<Style Selector="TabItem">
+				<Setter Property="MinHeight" Value="40"/>
+				<Setter Property="MinWidth" Value="60"/>
+				<Setter Property="Padding" Value="4,2"/>
+				<Setter Property="FontSize" Value="12"/>
+			</Style>
+		</TabControl.Styles>
+
+		<TabItem Header="Model">
+			<ListBox ItemsSource="{Binding Assets}"
+                     SelectedItem="{Binding SelectedAsset}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel>
+							<TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			
+			
+		</TabItem>
+		<TabItem Header="Material">
+			<TextBlock Text="Alt conținut" />
+		</TabItem>
+	</TabControl>
+
+</UserControl>

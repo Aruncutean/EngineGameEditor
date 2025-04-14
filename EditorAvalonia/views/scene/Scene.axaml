@@ -1,0 +1,42 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="EditorAvalonia.views.scene.Scene"
+		xmlns:local="clr-namespace:EditorAvalonia"
+		xmlns:core="clr-namespace:Core.models;assembly=Core"
+		xmlns:vm="clr-namespace:EditorAvalonia.viewmodels"
+		x:DataType="vm:SceneViewModel"
+        Title="Scene">
+
+	<StackPanel Margin="10">
+		<StackPanel>
+			<Grid Margin="10"
+				  ColumnDefinitions="100,*,*"
+				  RowDefinitions="Auto,Auto,Auto">
+				<TextBlock Grid.Row="1" Grid.Column="0" Margin="0,10,10,5" Text="Scene Name"/>
+				<TextBox Text="{Binding SceneName, Mode=TwoWay}"  Grid.Row="1" Grid.Column="1" Margin="0,0,10,5" Watermark="Scene Name"/>
+				<Button Grid.Row="1" Grid.Column="2" Margin="0,0,0,5" Content="Save" Command="{Binding SaveScene}"/>
+			</Grid>
+
+		</StackPanel>
+		<TextBlock Text="Scene disponibile" FontSize="16" FontWeight="Bold"/>
+		<ListBox x:Name="SceneList"
+				 Height="300"
+			      ItemsSource="{Binding Scenes}"
+                  SelectedItem="{Binding SelectedScene}"
+				>
+			<ListBox.ItemTemplate>
+				<DataTemplate x:DataType="core:SceneInfo">
+					<StackPanel>
+						<TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+
+		</ListBox>
+
+
+	</StackPanel>
+</Window>

@@ -1,0 +1,9 @@
+﻿{
+  "type": "dockspace",
+  "id": "MainDock",
+  "windows": [
+    { "include": "win.json" },
+    { "include": "win2.json" },
+    { "include": "scena.json" }
+  ]
+}

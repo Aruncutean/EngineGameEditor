@@ -1,0 +1,20 @@
+﻿{
+  "type": "window",
+  "id": "inspector",
+  "title": "Inspector",
+  "children": [
+    {
+      "type": "input",
+      "id": "objectName",
+      "label": "Object Name",
+      "value": "Cube",
+      "onChange": "HandleNameChange"
+    },
+    {
+      "type": "button",
+      "id": "applyButton",
+      "text": "Apply",
+      "onClick": "HandleApply"
+    }
+  ]
+}
