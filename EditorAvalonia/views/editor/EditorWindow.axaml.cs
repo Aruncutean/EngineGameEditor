@@ -8,6 +8,9 @@ using System.Windows.Input;
 using Avalonia.Interactivity;
 using EditorAvalonia.viewmodels;
 using System.Threading.Tasks;
+using Core.component;
+using Core.entity;
+using EditorAvalonia.views.component;
 
 namespace EditorAvalonia.views.editor;
 

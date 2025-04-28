@@ -1,52 +1,131 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="EditorAvalonia.views.editor.EditorWindow"
-		xmlns:vm="clr-namespace:EditorAvalonia.viewmodels"
-	    x:DataType="vm:EditorViewModel"
-		xmlns:local="clr-namespace:EditorAvalonia.views.editor"
-        Title="EditorAvalonia">
+<Window
+    x:Class="EditorAvalonia.views.editor.EditorWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:EditorAvalonia.views.editor"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:EditorAvalonia.viewmodels"
+    Title="EditorAvalonia"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:EditorViewModel"
+    Background="#181818"
+    mc:Ignorable="d">
 
-  	<DockPanel>
+	<DockPanel>
 		<Menu DockPanel.Dock="Top">
-			<MenuItem Header="_File">
-				<MenuItem Header="_Open..."  />
-				<Separator/>
-				<MenuItem Header="_Import"  Command="{Binding AddMesh}" />
-				<Separator/>
-				<MenuItem Header="_Exit"/>
+			<MenuItem
+                FontSize="12"
+                Foreground="White"
+                Header="_File">
+				<MenuItem Header="_Open..." />
+				<Separator />
+				<MenuItem Command="{Binding AddMeshCommand}" Header="_Import" />
+				<Separator />
+				<MenuItem Header="_Exit" />
 			</MenuItem>
-			<MenuItem Header="_Edit">
-				<MenuItem Header="Copy"/>
-				<MenuItem Header="Paste"/>
+			<MenuItem
+                FontSize="12"
+                Foreground="White"
+                Header="_Edit">
+
+				<MenuItem Command="{Binding Save}" Header="Save" />
+
 			</MenuItem>
 
-			<MenuItem Header="Build">
-				<MenuItem Header="Run"  Command="{Binding Run}"/>
+			<MenuItem
+                FontSize="12"
+                Foreground="White"
+                Header="Build">
+				<MenuItem Command="{Binding Run}" Header="Run" />
+				<MenuItem Command="{Binding RunAndroid}" Header="RunAndroid" />
 			</MenuItem>
 		</Menu>
-		<TextBlock/>
-	
+		<TextBlock />
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="2"/>
-			<RowDefinition Height="200"/>
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="2"/>
-			<ColumnDefinition Width="300" MaxWidth="400"/>
-		</Grid.ColumnDefinitions>
 
-		<local:OpenGLViewport Focusable = "true" Grid.Row="0" Grid.Column="0" Grid.RowSpan="1" Stretch="Fill" />
-		<GridSplitter Grid.Column="1"  Grid.Row="0" Grid.RowSpan="3" ResizeDirection="Columns"/>
-		<Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" Fill="Red"/>
-		<GridSplitter Grid.Column="0"  Grid.Row="1"  Background="Black" ResizeDirection="Rows"/>
-		<local:AssetsView  Grid.Column="0"  Grid.Row="2"  />
-	</Grid>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="1" />
+				<RowDefinition Height="200" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="1" />
+				<ColumnDefinition Width="300" />
+			</Grid.ColumnDefinitions>
+			<DockPanel
+                Grid.Row="0"
+                Grid.RowSpan="1"
+                Grid.Column="0">
+				<Border
+                    Margin="2"
+                    Padding="6"
+                    Background="#3F3F3F"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Effect="{StaticResource CardShadow}">
+
+					<Grid>
+						<local:OpenGLViewport Focusable="true" Stretch="Fill" />
+						<StackPanel
+                            Margin="8"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Background="#1e1e1e"
+                            Orientation="Vertical"
+                            Spacing="6">
+							<ToggleButton
+                                Width="32"
+                                Height="32"
+                                ToolTip.Tip="Select Tool">
+								<Image Source="avares://EditorAvalonia/assets/square.png" />
+							</ToggleButton>
+
+							<ToggleButton
+                                Width="32"
+                                Height="32"
+                                ToolTip.Tip="Move Tool">
+								<Image />
+							</ToggleButton>
+
+							<ToggleButton
+                                Width="32"
+                                Height="32"
+                                ToolTip.Tip="Rotate Tool">
+								<Image />
+							</ToggleButton>
+
+						</StackPanel>
+
+						<Grid.ContextMenu>
+							<ContextMenu>
+								<MenuItem Command="{Binding AddPointLight}" Header="Add Point of Light" />
+							</ContextMenu>
+						</Grid.ContextMenu>
+					</Grid>
+
+				</Border>
+			</DockPanel>
+
+			<GridSplitter
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="1"
+                Background="#181818"
+                ResizeDirection="Columns" />
+			<local:RightPanel
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="2" />
+			<GridSplitter
+                Grid.Row="1"
+                Grid.Column="0"
+                Background="#181818"
+                ResizeDirection="Rows" />
+			<local:AssetsView Grid.Row="2" Grid.Column="0" />
+		</Grid>
 	</DockPanel>
 </Window>

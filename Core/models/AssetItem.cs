@@ -21,13 +21,17 @@ namespace Core.models
         [JsonPropertyName("path")]
         public string Path { get; set; } = string.Empty;
 
+        [JsonPropertyName("baseDirector")]
+        public string BaseDirector { get; set; } = string.Empty;
+
         [JsonPropertyName("createdAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
     }
 
     public enum AssetType
     {
-        Mesh,Texture
+        Mesh, Texture, Folder, Material
 
     }
 

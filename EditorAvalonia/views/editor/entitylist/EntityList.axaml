@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="EditorAvalonia.views.editor.EntityList"
+	         xmlns:vm="clr-namespace:EditorAvalonia.viewmodels"
+	         x:DataType="vm:EntityListViewModel"
+			 xmlns:local="clr-namespace:EditorAvalonia.views.editor"
+		     Background="#181818"
+			 >
+
+	<Border Background="#303030"
+		   CornerRadius="8"
+		   BorderThickness="1"
+		   Padding="6"
+		   Margin="2"
+		  >
+		<ListBox
+            Background="#303030"
+			ItemsSource="{Binding Entities}"
+				 SelectedItem="{Binding SelectedEntity}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel>
+						<TextBlock Text="{Binding Name, Mode=TwoWay}" FontSize="12">
+						</TextBlock>
+						<StackPanel.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="Delete" Command="{Binding DeleteCommand}" />
+							</ContextMenu>
+						</StackPanel.ContextMenu>
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+	</Border>
+</UserControl>

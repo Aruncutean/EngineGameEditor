@@ -67,7 +67,7 @@ namespace EditorAvalonia.viewmodels
             SaveCommand = new RelayCommand(SaveScene);
 
 
-            _sceneService=new SceneService();
+            _sceneService = new SceneService();
             foreach (var scene in _sceneService.Scenes)
             {
                 Scenes.Add(scene);
@@ -78,8 +78,6 @@ namespace EditorAvalonia.viewmodels
         {
 
             var now = DateTime.Now;
-
-
             SceneInfo info = new SceneInfo
             {
                 Name = SceneName,

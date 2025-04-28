@@ -10,11 +10,9 @@ namespace Core.system
 {
     public class CameraSystem
     {
-        public Matrix4x4 GetViewMatrix(TransformComponent transform)
+        public Matrix4x4 GetViewMatrix(TransformComponent transform,CameraComponent cameraComponent)
         {
-            var forward = Vector3.Transform(-Vector3.UnitZ, transform.Rotation);
-            var target = transform.Position + forward;
-            return Matrix4x4.CreateLookAt(transform.Position, target, Vector3.UnitY);
+            return Matrix4x4.CreateLookAt(transform.Position, transform.Position + cameraComponent.Front, cameraComponent.Up);
         }
 
         public Matrix4x4 GetProjectionMatrix(CameraComponent cam, float aspectRatio)

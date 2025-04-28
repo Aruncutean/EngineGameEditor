@@ -9,7 +9,7 @@ namespace Core.graphics.shader
 {
     public class ShaderManager
     {
-        private static readonly Dictionary<string, uint> _shaders = new();
+        private static readonly Dictionary<ShaderTypes, uint> _shaders = new();
         private static GL _gl;
 
         public static void Init(GL gl)
@@ -17,7 +17,7 @@ namespace Core.graphics.shader
             _gl = gl;
         }
 
-        public static uint Load(string id, string vertexPath, string fragmentPath)
+        public static uint Load(ShaderTypes id, string vertexPath, string fragmentPath)
         {
             if (_shaders.ContainsKey(id))
                 return _shaders[id];
@@ -49,7 +49,7 @@ namespace Core.graphics.shader
             return program;
         }
 
-        public static uint Get(string id)
+        public static uint Get(ShaderTypes id)
         {
             if (!_shaders.TryGetValue(id, out var program))
                 throw new Exception($"Shader with ID '{id}' not loaded.");

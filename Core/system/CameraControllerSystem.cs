@@ -17,12 +17,22 @@ namespace Core.system
         private readonly HashSet<Key> _keys = new();
         private Vector2 _lastMousePos;
         private bool _firstMove = true;
-        private float _yaw = 0f;
+        private float _yaw = -90f;
         private float _pitch = 0f;
 
         private bool mousePresssBool = false;
         public float MoveSpeed { get; set; } = 5f;
         public float LookSensitivity { get; set; } = 0.002f;
+
+        private CameraComponent cameraComponent;
+        private TransformComponent transform;
+
+        public CameraControllerSystem(Entity cameraEntity)
+        {
+            transform = cameraEntity.GetComponent<TransformComponent>();
+            cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+        }
+
 
         public void mousePresss(bool mouseButtonPressed)
         {
@@ -32,58 +42,66 @@ namespace Core.system
         public void OnKeyDown(Key key) => _keys.Add(key);
         public void OnKeyUp(Key key) => _keys.Remove(key);
 
-
-
         public void OnMouseMove(Vector2 newPos)
         {
-
             if (_firstMove)
             {
                 _lastMousePos = newPos;
                 _firstMove = false;
             }
 
-            var delta = newPos - _lastMousePos;
+            float xoffset = newPos.X - _lastMousePos.X;
+            float yoffset = _lastMousePos.Y - newPos.Y;
             _lastMousePos = newPos;
+
             if (mousePresssBool)
             {
+                float sensitivity = 0.1f;
+                xoffset *= sensitivity;
+                yoffset *= sensitivity;
 
+                _yaw += xoffset;
+                _pitch += yoffset;
 
-                _yaw -= delta.X * LookSensitivity;
-                _pitch -= delta.Y * LookSensitivity;
-                _pitch = Math.Clamp(_pitch, -89f, 89f);
+                if (_pitch > 89.0f)
+                    _pitch = 89.0f;
+                if (_pitch < -89.0f)
+                    _pitch = -89.0f;
+
+                float yawRad = MathF.PI / 180f * _yaw;
+                float pitchRad = MathF.PI / 180f * _pitch;
+
+                Vector3 front = new Vector3
+                {
+                    X = MathF.Cos(yawRad) * MathF.Cos(pitchRad),
+                    Y = MathF.Sin(pitchRad),
+                    Z = MathF.Sin(yawRad) * MathF.Cos(pitchRad)
+                };
+
+                cameraComponent.Front = Vector3.Normalize(front);
             }
         }
 
-        public void Update(float deltaTime, Entity cameraEntity)
+        public void Update(float deltaTime)
         {
-            var transform = cameraEntity.GetComponent<TransformComponent>();
+            var cameraSeed = MoveSpeed * deltaTime;
 
-            var forward = Vector3.Transform(-Vector3.UnitZ, transform.Rotation);
-            var right = Vector3.Transform(Vector3.UnitX, transform.Rotation);
-            var up = Vector3.UnitY;
-
-            Vector3 move = Vector3.Zero;
-
-            if (_keys.Contains(Key.W)) move += forward;
-            if (_keys.Contains(Key.S)) move -= forward;
-            if (_keys.Contains(Key.A)) move -= right;
-            if (_keys.Contains(Key.D)) move += right;
-            if (_keys.Contains(Key.Space)) move += up;
-            if (_keys.Contains(Key.ShiftLeft)) move -= up;
-
-            if (move != Vector3.Zero)
-                transform.Position += Vector3.Normalize(move) * MoveSpeed * deltaTime;
-
-            var yawRot = Quaternion.CreateFromAxisAngle(Vector3.UnitY, _yaw);
-            var pitchRot = Quaternion.CreateFromAxisAngle(Vector3.UnitX, _pitch);
-
-            transform.Rotation = Quaternion.Normalize(pitchRot * yawRot);
+            if (_keys.Contains(Key.W))
+            {
+                transform.Position += cameraSeed * cameraComponent.Front;
+            }
+            if (_keys.Contains(Key.S))
+            {
+                transform.Position -= cameraSeed * cameraComponent.Front;
+            }
+            if (_keys.Contains(Key.A))
+            {
+                transform.Position -= Vector3.Normalize(Vector3.Cross(cameraComponent.Front, cameraComponent.Up)) * cameraSeed;
+            }
+            if (_keys.Contains(Key.D))
+            {
+                transform.Position += Vector3.Normalize(Vector3.Cross(cameraComponent.Front, cameraComponent.Up)) * cameraSeed;
+            }
         }
-
-
-
-
-    
     }
 }

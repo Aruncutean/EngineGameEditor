@@ -50,7 +50,7 @@ namespace Core.system
                 if (move != Vector3.Zero)
                 {
                     move = Vector3.Normalize(move);
-                    move = Vector3.Transform(move, transform.Rotation);
+                   
                     transform.Position += move * controller.MoveSpeed * deltaTime;
                 }
 
@@ -64,7 +64,6 @@ namespace Core.system
                 var yawQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitY, -yaw);
                 var pitchQuat = Quaternion.CreateFromAxisAngle(Vector3.UnitX, -pitch);
 
-                transform.Rotation = Quaternion.Normalize(pitchQuat * rot * yawQuat);
             }
         }
     }

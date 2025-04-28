@@ -1,12 +1,17 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="EditorAvalonia.App"
- 
-			 RequestedThemeVariant="Light"
+            
+			 RequestedThemeVariant="Dark"
 			 >
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+	<Application.Resources>
 
-    <Application.Styles>
-        <FluentTheme />
-    </Application.Styles>
+	</Application.Resources>
+	<Application.Styles>
+		<FluentTheme />
+		<StyleInclude Source="avares://EditorAvalonia/assets/ExpanderStyle.axaml"/>
+	</Application.Styles>
+
+
 </Application>

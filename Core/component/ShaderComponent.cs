@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.graphics.shader;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Core.component
 {
     public class ShaderComponent : IComponent
     {
-        public string shaderType { get; set; } = "basic";
+        public ShaderTypes shaderType { get; set; } = ShaderTypes.Basic;
     }
 }

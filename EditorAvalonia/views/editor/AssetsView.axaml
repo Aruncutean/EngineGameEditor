@@ -1,40 +1,98 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="EditorAvalonia.views.editor.AssetsView"
-			 xmlns:vm="clr-namespace:EditorAvalonia.viewmodels"
-			 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-	         x:DataType="vm:AssetsViewModel"
-             >
-	<TabControl TabStripPlacement="Left">
-		<TabControl.Styles>
-			<Style Selector="TabItem">
-				<Setter Property="MinHeight" Value="40"/>
-				<Setter Property="MinWidth" Value="60"/>
-				<Setter Property="Padding" Value="4,2"/>
-				<Setter Property="FontSize" Value="12"/>
-			</Style>
-		</TabControl.Styles>
+<UserControl
+    x:Class="EditorAvalonia.views.editor.AssetsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:EditorAvalonia.views.editor"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utils="clr-namespace:EditorAvalonia.utils"
+    xmlns:vm="clr-namespace:EditorAvalonia.viewmodels;assembly=EditorAvalonia"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:AssetsViewModel"
+    Background="#181818"
+    mc:Ignorable="d">
 
-		<TabItem Header="Model">
-			<ListBox ItemsSource="{Binding Assets}"
-                     SelectedItem="{Binding SelectedAsset}">
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<StackPanel>
-							<TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-						</StackPanel>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
-			
-			
-		</TabItem>
-		<TabItem Header="Material">
-			<TextBlock Text="Alt conținut" />
-		</TabItem>
-	</TabControl>
+	<UserControl.Resources>
+		<utils:InverseBoolConverter x:Key="InverseBoolConverter" />
+	</UserControl.Resources>
 
+	<Border
+        Padding="8"
+        Background="#2A2A2A"
+        CornerRadius="8">
+		<Border.ContextMenu>
+			<ContextMenu>
+				<MenuItem Command="{Binding AddFoldern}" Header="New Foldern" />
+				<MenuItem Command="{Binding AddNewMaterial}" Header="New Material" />
+				<MenuItem Header="New Mash" />
+			</ContextMenu>
+		</Border.ContextMenu>
+		<StackPanel>
+			<StackPanel
+                Margin="0,0,0,8"
+                Orientation="Horizontal"
+                Spacing="6">
+				<ItemsControl x:Name="DriversPanel" ItemsSource="{Binding BreadcrumbParts}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Orientation="Horizontal" />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Button
+                                Margin="0,0,4,0"
+                                Padding="4,2"
+                                Command="{Binding #DriversPanel((vm:AssetsViewModel)DataContext).NavigateTo}"
+                                CommandParameter="{Binding .}"
+                                Content="{Binding Name}" />
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</StackPanel>
+			<ScrollViewer>
+				<ListBox
+                    Background="Transparent"
+                    BorderThickness="0"
+                    DoubleTapped="Asset_DoubleTapped"
+                    ItemsSource="{Binding Assets}"
+                    SelectedItem="{Binding SelectedAsset, Mode=TwoWay}">
+					<ListBox.ItemsPanel>
+						<ItemsPanelTemplate>
+							<WrapPanel Orientation="Horizontal" />
+						</ItemsPanelTemplate>
+					</ListBox.ItemsPanel>
+
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Width="80" HorizontalAlignment="Center">
+								<Image Source="{Binding Icon}" />
+								<TextBox
+                                    HorizontalAlignment="Center"
+                                    FontSize="12"
+                                    IsVisible="{Binding IsRenaming, Mode=OneWay}"
+                                    LostFocus="OnRenameLostFocus"
+                                    Text="{Binding Name}" />
+								<TextBlock
+                                    HorizontalAlignment="Center"
+                                    FontSize="12"
+                                    IsVisible="{Binding IsRenaming, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}"
+                                    Text="{Binding Name}" />
+
+								<StackPanel.ContextMenu>
+									<ContextMenu>
+										<MenuItem Command="{Binding StartRename}" Header="Rename" />
+										<MenuItem Header="Delete" />
+									</ContextMenu>
+								</StackPanel.ContextMenu>
+							</StackPanel>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</ScrollViewer>
+
+		</StackPanel>
+	</Border>
 </UserControl>

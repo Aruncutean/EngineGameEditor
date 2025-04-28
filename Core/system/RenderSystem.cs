@@ -37,42 +37,72 @@ namespace Core.system
             {
                 return;
             }
-            var view = _cameraSystem.GetViewMatrix(transform);
+            var view = _cameraSystem.GetViewMatrix(transform, camera);
             var projection = _cameraSystem.GetProjectionMatrix(camera, (float)screenWidth / screenHeight);
+            var lights = scene.Entities
+         .Where(e => e.HasComponent<LightComponent>())
+         .ToList();
 
+            var renderables = scene.Entities
+      .Where(e => e.HasComponent<MeshComponent>() && e.HasComponent<ShaderComponent>())
+      .Where(e => !e.HasComponent<LightComponent>()) // ← foarte important
+      .ToList();
 
-            foreach (var entity in scene.Entities)
+            foreach (var entity in renderables)
             {
                 var transformComponent = entity.GetComponent<TransformComponent>();
                 var meshComponent = entity.GetComponent<MeshComponent>();
                 var shaderComponent = entity.GetComponent<ShaderComponent>();
 
+                ShaderProgram shaderProgram = null;
+                ShaderBinder binder = null;
 
-
-                if (meshComponent != null && transformComponent != null && shaderComponent != null)
+                if (shaderComponent != null)
                 {
-                    uint shaderProgram = ShaderManager.Get(shaderComponent.shaderType);
-                    gl.UseProgram(shaderProgram);
-
-                    Matrix4x4 model = Matrix4x4.Identity;
-                    model = Matrix4x4.CreateTranslation(transformComponent.Position);
-
-                    var binder = new ShaderBinder(gl, new ShaderProgram(shaderProgram));
-                    binder.SetMat4("model", model);
-                    binder.SetMat4("view", view);
-                    binder.SetMat4("projection", projection);
-
-
-                    if (meshComponent.gLMesh == null)
-                    {
-                        meshComponent.LoadMesh(gl);
-                    }
-                    else
-                    {
-                        meshComponent.gLMesh.Render();
-                    }
-
+                    shaderProgram = new ShaderProgram(ShaderManager.Get(shaderComponent.shaderType));
+                    shaderProgram.Use(gl);
+                    binder = new ShaderBinder(gl, shaderProgram);
                 }
+
+                if (shaderProgram != null
+                    && transformComponent != null
+                    && shaderComponent != null
+                    && shaderComponent.shaderType != ShaderTypes.Basic)
+                {
+                    foreach (var light in lights)
+                    {
+                        var lightComp = light.GetComponent<LightComponent>();
+                        var lightTransform = light.GetComponent<TransformComponent>();
+
+                        binder.SetVec3("lightPos", lightTransform.Position);
+                        binder.SetVec3("viewPos", transform.Position);
+                        binder.SetVec3("lightColor", new Vector3(1f, 1f, 1f));
+                        binder.SetVec3("objectColor", new Vector3(1f, 0.5f, 0.3f));
+                    }
+                }
+
+                if (transformComponent != null && shaderComponent != null && shaderProgram != null)
+
+                    if (meshComponent != null && transformComponent != null && shaderComponent != null)
+                    {
+                        Matrix4x4 model = Matrix4x4.Identity;
+                        model = Matrix4x4.CreateTranslation(transformComponent.Position);
+
+                        binder.SetMat4("model", model);
+                        binder.SetMat4("view", view);
+                        binder.SetMat4("projection", projection);
+
+
+                        if (meshComponent.gLMesh == null)
+                        {
+                            meshComponent.LoadMesh(gl);
+                        }
+                        else
+                        {
+                            meshComponent.gLMesh.Render();
+                        }
+
+                    }
 
             }
         }

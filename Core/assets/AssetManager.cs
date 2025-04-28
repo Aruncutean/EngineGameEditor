@@ -25,12 +25,10 @@ namespace Core.assets
             if (File.Exists(path))
             {
                 string jsonString = File.ReadAllText(path);
-                return JsonSerializer.Deserialize<AssetCollection>(jsonString);
-
+                return JsonSerializer.Deserialize<AssetCollection>(jsonString) ?? new AssetCollection();
             }
             return new AssetCollection();
         }
-
 
         public void SaveMesh(string path, MeshData meshData)
         {
@@ -38,12 +36,11 @@ namespace Core.assets
             {
                 WriteIndented = true,
                 Converters = {
-                    new Vector3Converter(),
-                    new Vector2Converter()
-                }
+                        new Vector3Converter(),
+                        new Vector2Converter()
+                    }
             });
             File.WriteAllText(path, newJson);
-
         }
 
         public MeshData LoadMesh(string path)
@@ -51,10 +48,9 @@ namespace Core.assets
             if (File.Exists(path))
             {
                 string jsonString = File.ReadAllText(path);
-                return JsonSerializer.Deserialize<MeshData>(jsonString);
-
+                return JsonSerializer.Deserialize<MeshData>(jsonString) ?? new MeshData();
             }
-            return null;
+            return new MeshData();
         }
     }
 }

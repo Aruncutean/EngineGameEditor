@@ -1,4 +1,5 @@
-﻿using Core.graphics.mesh;
+﻿using Core.attributes;
+using Core.graphics.mesh;
 using Core.models;
 using Silk.NET.OpenGL;
 using System;
@@ -12,6 +13,7 @@ namespace Core.component
 {
     public class MeshComponent : IComponent
     {
+        [ReadOnlyInEditor]
         public string MeshPath { get; set; } = string.Empty;
 
         [JsonIgnore]

@@ -1,11 +1,17 @@
-﻿using EditorAvalonia.models.Mesh;
+﻿using Core.component;
+using Core.entity;
+using Core.graphics.shader;
+using Core.IO;
+using EditorAvalonia.models.Mesh;
 using EditorAvalonia.runtime;
 using EditorAvalonia.service;
 using EditorAvalonia.utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -21,17 +27,62 @@ namespace EditorAvalonia.viewmodels
 
         public ICommand AddMeshCommand { get; set; }
         public ICommand RunCommand { get; set; }
+
+        public ICommand RunAndroidCommand { get; set; }
         public EditorViewModel()
         {
 
             AddMeshCommand = new RelayCommand(async () => await AddMesh(), CanOpenProject);
             RunCommand = new RelayCommand(() => Run(), CanOpenProject);
+            RunAndroidCommand = new RelayCommand(() => RunAndroid(), CanOpenProject);
 
         }
 
         private bool CanOpenProject()
         {
             return true;
+        }
+
+        public void RunAndroid()
+        {
+            RuntimeLauncher runtimeLauncher = new RuntimeLauncher();
+            string path = StoreService.GetInstance().ProjectInfo.Path;
+            string outputZipPath = Path.Combine(path, "project.zip");
+            RuntimeLauncher.Create(path, outputZipPath);
+            runtimeLauncher.StartEmulator();
+        }
+       
+        public void AddPointLight()
+        {
+            Entity entityLight = new Entity();
+            entityLight.Name = "Light";
+            entityLight.AddComponent(new TransformComponent
+            {
+                Position = new Vector3(0, 5, 0),
+                Scale = new Vector3(1, 1, 1)
+            });
+
+            LightComponent lightComponent = new LightComponent
+            {
+                Color = new Vector3(1, 1, 1),
+                Intensity = 1.0f
+            };
+
+
+            entityLight.AddComponent(lightComponent);
+            entityLight.AddComponent(new ShaderComponent
+            {
+                shaderType = ShaderTypes.gizmo
+            });
+            StoreService.GetInstance().AddEntity(entityLight);
+        }
+
+        public void Save()
+        {
+                var scenePath = Path.Combine(StoreService.GetInstance().ProjectInfo.Path, "scenes", StoreService.GetInstance().Scene.Path);
+                SceneIO sceneIO = new SceneIO();
+                sceneIO.SaveScene(scenePath, StoreService.GetInstance().Scene);
+          
         }
 
         public void Run()

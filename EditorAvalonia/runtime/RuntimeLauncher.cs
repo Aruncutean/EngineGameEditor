@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,6 @@ namespace EditorAvalonia.runtime
                 Console.WriteLine("❌ Runtime exe not found.");
                 return;
             }
-
 
             var args = $"\"{projectPath}\"";
                 args += " --edit";
@@ -45,5 +45,95 @@ namespace EditorAvalonia.runtime
                 Console.WriteLine($"❌ Failed to start: {ex.Message}");
             }
         }
+
+        public static void Create(string projectFolder, string outputZipPath)
+        {
+            if (File.Exists(outputZipPath))
+                File.Delete(outputZipPath);
+
+            using var archive = ZipFile.Open(outputZipPath, ZipArchiveMode.Create);
+
+            // Adaugă project.json
+            string projectJsonPath = Path.Combine(projectFolder, "project.json");
+            if (File.Exists(projectJsonPath))
+                archive.CreateEntryFromFile(projectJsonPath, "project.json");
+
+            // Adaugă scenes/
+            string scenesFolder = Path.Combine(projectFolder, "scenes");
+            if (Directory.Exists(scenesFolder))
+            {
+                foreach (var file in Directory.GetFiles(scenesFolder))
+                {
+                    string entryName = Path.Combine("scenes", Path.GetFileName(file));
+                    archive.CreateEntryFromFile(file, entryName);
+                }
+            }
+
+            // Adaugă assets/
+            string assetsFolder = Path.Combine(projectFolder, "assets");
+            if (Directory.Exists(assetsFolder))
+            {
+                foreach (var file in Directory.GetFiles(assetsFolder))
+                {
+                    string entryName = Path.Combine("assets", Path.GetFileName(file));
+                    archive.CreateEntryFromFile(file, entryName);
+                }
+            }
+
+            Console.WriteLine($"✅ GameData.zip creat la: {outputZipPath}");
+        }
+
+      public  void StartEmulator()
+        {
+            Run("adb", "start-server");
+            var list = RunWithResult("adb", "devices");
+
+            if (!list.Contains("emulator"))
+            {
+                Console.WriteLine("📱 Lansează un emulator în Android Studio sau folosind avdmanager.");
+                // sau automatizează cu `emulator -avd <name>`
+          
+            }
+        }
+
+        void Run(string file, string args)
+        {
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = file,
+                    Arguments = args,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            p.Start();
+            p.WaitForExit();
+        }
+
+        string RunWithResult(string file, string args)
+        {
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = file,
+                    Arguments = args,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            p.Start();
+            string output = p.StandardOutput.ReadToEnd();
+            p.WaitForExit();
+            return output;
+        }
+
+
     }
+
+
 }

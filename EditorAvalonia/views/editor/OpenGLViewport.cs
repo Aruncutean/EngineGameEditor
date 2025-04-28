@@ -27,12 +27,13 @@ using Assimp;
 using Silk.NET.Input;
 using Avalonia.Input;
 using Core.IO;
+using MsBox.Avalonia;
 
 namespace EditorAvalonia.views.editor
 {
     public class OpenGLViewport : Image
     {
-        
+
         private IWindow? _window;
         private GL? _gl;
         private WriteableBitmap? _bitmap;
@@ -45,12 +46,14 @@ namespace EditorAvalonia.views.editor
         private int height = 512;
         private bool _framebufferReady = false;
 
-        
         private Core.scene.Scene _scene;
         private static RenderSystem _renderer;
+        private static EditorGizmoSystem _editorGizmoSystem;
         private static CameraControllerSystem _cameraControllerSystem;
         private IInputContext _input;
         private Entity? _cameraEntity;
+        private uint msFBO;
+        private uint msColorTex;
         public OpenGLViewport()
         {
             this.KeyDown += OnKeyDown;
@@ -74,10 +77,14 @@ namespace EditorAvalonia.views.editor
 
                 if (_initialized)
                 {
-                    if (_window != null) { _window.Size = new Vector2D<int>(width, height);
+                    if (_window != null)
+                    {
+                        _window.Size = new Vector2D<int>(width, height);
                         SetupFramebuffer();
                         _renderer.screenWidth = width;
                         _renderer.screenHeight = height;
+                        _editorGizmoSystem.screenWidth = width;
+                        _editorGizmoSystem.screenHeight = height;
                     }
 
                 }
@@ -98,17 +105,20 @@ namespace EditorAvalonia.views.editor
             _window.Load += () =>
             {
                 _input = _window.CreateInput();
-             
+
                 _gl = GL.GetApi(_window);
                 ShaderManager.Init(_gl);
 
-                ShaderManager.Load("basic", "shader/basic.vert.glsl", "shader/basic.frag.glsl");
+                ShaderManager.Load(ShaderTypes.Basic, "shader/basic.vert.glsl", "shader/basic.frag.glsl");
+                ShaderManager.Load(ShaderTypes.gizmo, "shader/gizmo.vert.glsl", "shader/gizmo.frag.glsl");
+                ShaderManager.Load(ShaderTypes.Phong, "shader/phong.vert.glsl", "shader/phong.frag.glsl");
 
                 var scenePath = Path.Combine(StoreService.GetInstance().ProjectInfo.Path, "scenes", StoreService.GetInstance().CurentScene.Path);
                 var json = File.ReadAllText(Path.Combine(StoreService.GetInstance().ProjectInfo.Path, scenePath));
-            
+
                 SceneIO sceneIO = new SceneIO();
-                StoreService.GetInstance().Scene = sceneIO.LoadScene(scenePath);
+
+                StoreService.GetInstance().SetScene(sceneIO.LoadScene(scenePath));
                 _scene = StoreService.GetInstance().Scene;
 
                 if (_scene == null)
@@ -118,16 +128,24 @@ namespace EditorAvalonia.views.editor
                 _cameraEntity.AddComponent(new TransformComponent
                 {
                     Position = new Vector3(0, 0, 5),
-                    Rotation = System.Numerics.Quaternion.Identity
+
                 });
                 _cameraEntity.AddComponent(new CameraComponent { IsMainCamera = true });
                 _cameraEntity.AddComponent(new CameraControllerComponent { MoveSpeed = 5f });
 
                 _renderer = new RenderSystem();
                 _renderer.cameraEntity = _cameraEntity;
-                _cameraControllerSystem = new CameraControllerSystem();
+
+                _editorGizmoSystem = new EditorGizmoSystem(_gl);
+                _editorGizmoSystem.cameraEntity = _cameraEntity;
+
+                _cameraControllerSystem = new CameraControllerSystem(_cameraEntity);
 
                 _gl.Enable(GLEnum.DepthTest);
+                _gl.Enable(GLEnum.Multisample);
+                _gl.Enable(GLEnum.Blend);
+                _gl.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
+
             };
 
             _window.Update += _ =>
@@ -137,17 +155,18 @@ namespace EditorAvalonia.views.editor
                 {
                     if (_scene != null)
                     {
-                        _cameraControllerSystem.Update((float)_, _cameraEntity);
+                        _cameraControllerSystem.Update((float)_);
                     }
                 }
             };
 
             _window.Render += _ =>
             {
+                _gl.BindFramebuffer(FramebufferTarget.Framebuffer, msFBO);
                 _gl.Viewport(0, 0, (uint)width, (uint)height);
+                _gl?.ClearColor(0.247f, 0.247f, 0.247f, 1.0f);
+                _gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-                _gl?.Clear(ClearBufferMask.ColorBufferBit);
-                _gl?.ClearColor(0.2f, 0.2f, 0.4f, 1.0f);
 
                 if (!_initialized)
                 {
@@ -155,18 +174,24 @@ namespace EditorAvalonia.views.editor
                     _initialized = true;
                 }
 
-                _gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebuffer);
-                _gl.Viewport(0, 0, (uint)width, (uint)height);
-
-                _gl.ClearColor(0.2f, 0.2f, 0.4f, 1.0f);
-                _gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-           
                 if (_scene != null)
                 {
+                    _editorGizmoSystem.Render(_scene);
                     _renderer.Render(_scene, _gl);
+
                 }
-                
+
+                _gl.BindFramebuffer(FramebufferTarget.DrawFramebuffer, _framebuffer);
+
+                _gl.BlitFramebuffer(
+                    0, 0, width, height,
+                    0, 0, width, height,
+                    ClearBufferMask.ColorBufferBit,
+                    BlitFramebufferFilter.Linear
+                );
+
+                _gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebuffer);
+
                 byte[] pixels = new byte[width * height * 4];
                 _gl.ReadPixels(0, 0, (uint)width, (uint)height,
                     Silk.NET.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, pixels.AsSpan());
@@ -202,31 +227,61 @@ namespace EditorAvalonia.views.editor
                 if (_gl == null)
                     throw new InvalidOperationException("GL is not initialized");
 
-                nint zero = 0;
+                // 🟡 Multisample framebuffer (anti-aliasing)
+                msFBO = _gl.GenFramebuffer();
+                _gl.BindFramebuffer(FramebufferTarget.Framebuffer, msFBO);
 
+                // Multisample color buffer
+                msColorTex = _gl.GenTexture();
+                _gl.BindTexture(TextureTarget.Texture2DMultisample, msColorTex);
+                _gl.TexImage2DMultisample(TextureTarget.Texture2DMultisample, 8, InternalFormat.Rgba8, (uint)width, (uint)height, true);
+                _gl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
+                    TextureTarget.Texture2DMultisample, msColorTex, 0);
+
+                // Multisample depth buffer
+                uint msDepthRBO = _gl.GenRenderbuffer();
+                _gl.BindRenderbuffer(RenderbufferTarget.Renderbuffer, msDepthRBO);
+                _gl.RenderbufferStorageMultisample(RenderbufferTarget.Renderbuffer, 8, InternalFormat.DepthComponent24, (uint)width, (uint)height);
+                _gl.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment,
+                    RenderbufferTarget.Renderbuffer, msDepthRBO);
+
+                // Check if framebuffer is complete
+                if (_gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != GLEnum.FramebufferComplete)
+                    throw new Exception("Multisample framebuffer not complete!");
+
+                // 🔵 Normal framebuffer (rezultat final în textură)
                 _framebuffer = _gl.GenFramebuffer();
                 _gl.BindFramebuffer(FramebufferTarget.Framebuffer, _framebuffer);
 
                 _texture = _gl.GenTexture();
                 _gl.BindTexture(TextureTarget.Texture2D, _texture);
-                _gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba,
-                    (uint)width, (uint)height, 0,
-                    Silk.NET.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte,
-                    null);
-
+                _gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)width, (uint)height, 0,
+                    Silk.NET.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, null);
                 _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.Linear);
                 _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Linear);
 
                 _gl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
                     TextureTarget.Texture2D, _texture, 0);
 
-                var status = _gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-                if (status != GLEnum.FramebufferComplete)
-                    throw new Exception($"Framebuffer incomplete! Status: {status}");
+                // Depth buffer pentru cel final (opțional)
+                uint depthRBO = _gl.GenRenderbuffer();
+                _gl.BindRenderbuffer(RenderbufferTarget.Renderbuffer, depthRBO);
+                _gl.RenderbufferStorage(RenderbufferTarget.Renderbuffer, InternalFormat.DepthComponent24, (uint)width, (uint)height);
+                _gl.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment,
+                    RenderbufferTarget.Renderbuffer, depthRBO);
 
-                _gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                if (_gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != GLEnum.FramebufferComplete)
+                    throw new Exception("Final framebuffer not complete!");
+
+                // ✔ Store it if needed
                 _framebufferReady = true;
+
+                // Setează default la final
+                _gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+                // 🔁 Salvează MSFBO & textura multisample în câmpuri dacă vrei să le folosești în render loop
             }
+
         }
         private void OnKeyDown(object? sender, KeyEventArgs e)
         {
@@ -250,13 +305,13 @@ namespace EditorAvalonia.views.editor
         {
             this.Focus();
             var pos = e.GetPosition(this);
-            
+
             bool mouseButtonPressed = e.GetCurrentPoint(this).Properties.IsLeftButtonPressed;
 
-            _cameraControllerSystem?.mousePresss( mouseButtonPressed);
+            _cameraControllerSystem?.mousePresss(mouseButtonPressed);
         }
 
-        public  Silk.NET.Input.Key MapKey(Avalonia.Input.Key key)
+        public Silk.NET.Input.Key MapKey(Avalonia.Input.Key key)
         {
             return key switch
             {
@@ -275,8 +330,6 @@ namespace EditorAvalonia.views.editor
             var pos = e.GetPosition(this);
             _cameraControllerSystem?.OnMouseMove(new Vector2((float)pos.X, (float)pos.Y));
         }
-
-
         private void DeleteFramebuffer()
         {
             if (_gl == null)
@@ -305,9 +358,13 @@ namespace EditorAvalonia.views.editor
                 int topIndex = y * stride;
                 int bottomIndex = (height - y - 1) * stride;
 
-                Buffer.BlockCopy(pixels, topIndex, tempRow, 0, stride);
-                Buffer.BlockCopy(pixels, bottomIndex, pixels, topIndex, stride);
-                Buffer.BlockCopy(tempRow, 0, pixels, bottomIndex, stride);
+                int expectedSize = width * height * 4;
+                if (pixels.Length == expectedSize)
+                {
+                    Buffer.BlockCopy(pixels, topIndex, tempRow, 0, stride);
+                    Buffer.BlockCopy(pixels, bottomIndex, pixels, topIndex, stride);
+                    Buffer.BlockCopy(tempRow, 0, pixels, bottomIndex, stride);
+                }
             }
         }
 
