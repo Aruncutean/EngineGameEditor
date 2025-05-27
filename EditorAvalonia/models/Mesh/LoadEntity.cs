@@ -1,5 +1,5 @@
 ﻿using Assimp;
-using Core.models;
+using Core.graphics.mesh;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace EditorAvalonia.models.Mesh
 {
     public class LoadEntity
     {
-        public  MeshData LoadMesh(string filePath)
+        public MeshData LoadMesh(string filePath)
         {
             var context = new AssimpContext();
             var scene = context.ImportFile(filePath, PostProcessSteps.Triangulate | PostProcessSteps.JoinIdenticalVertices);

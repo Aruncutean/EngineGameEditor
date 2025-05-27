@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Core.graphics.mesh
 {
     using Core.component;
-    using Core.models;
     using Silk.NET.OpenGL;
 
     public class GLMesh

@@ -1,6 +1,5 @@
 ﻿using Core.attributes;
 using Core.graphics.mesh;
-using Core.models;
 using Silk.NET.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -20,14 +19,14 @@ namespace Core.component
         public MeshData? RuntimeMesh { get; set; }
 
         [JsonIgnore]
-        public GLMesh gLMesh { get; set; } 
+        public GLMesh gLMesh { get; set; }
 
 
         public void LoadMesh(GL gL)
         {
-        
+
             RuntimeMesh = MeshRegistry.GetMesh(MeshPath);
-            gLMesh = new GLMesh(gL,RuntimeMesh);
+            gLMesh = new GLMesh(gL, RuntimeMesh);
 
         }
     }

@@ -25,6 +25,7 @@
 			<ContextMenu>
 				<MenuItem Command="{Binding AddFoldern}" Header="New Foldern" />
 				<MenuItem Command="{Binding AddNewMaterial}" Header="New Material" />
+				<MenuItem Command="{Binding AddNewTexture}" Header="New Texture" />
 				<MenuItem Header="New Mash" />
 			</ContextMenu>
 		</Border.ContextMenu>
@@ -52,19 +53,19 @@
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
 			</StackPanel>
-			<ScrollViewer>
+			<ScrollViewer MaxHeight="160" VerticalScrollBarVisibility="Auto">
 				<ListBox
                     Background="Transparent"
                     BorderThickness="0"
                     DoubleTapped="Asset_DoubleTapped"
                     ItemsSource="{Binding Assets}"
                     SelectedItem="{Binding SelectedAsset, Mode=TwoWay}">
+
 					<ListBox.ItemsPanel>
 						<ItemsPanelTemplate>
 							<WrapPanel Orientation="Horizontal" />
 						</ItemsPanelTemplate>
 					</ListBox.ItemsPanel>
-
 					<ListBox.ItemTemplate>
 						<DataTemplate>
 							<StackPanel Width="80" HorizontalAlignment="Center">
@@ -92,7 +93,6 @@
 					</ListBox.ItemTemplate>
 				</ListBox>
 			</ScrollViewer>
-
 		</StackPanel>
 	</Border>
 </UserControl>

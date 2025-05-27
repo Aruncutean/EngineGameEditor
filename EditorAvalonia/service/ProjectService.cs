@@ -36,6 +36,19 @@ namespace EditorAvalonia.service
             var json = JsonSerializer.Serialize(projects, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(ProjectsFile, json);
         }
+
+        public void removeProject(string name)
+        {
+            var projects = LoadProjectList();
+            var projectToRemove = projects.FirstOrDefault(p => p.Name == name);
+            if (projectToRemove != null)
+            {
+                projects.Remove(projectToRemove);
+                SaveProjectList(projects);
+
+            }
+        }
+
         public ProjectInfo CreateProject(string name, string rootPath)
         {
             var projectDir = Path.Combine(rootPath, name);
@@ -61,7 +74,7 @@ namespace EditorAvalonia.service
             ProjectData projectData = new ProjectData
             {
                 Name = name,
-
+                Path = projectDir,
             };
 
 

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Core.component;
 using Core.entity;
 using EditorAvalonia.views.component;
+using EditorAvalonia.service;
 
 namespace EditorAvalonia.views.editor;
 
@@ -24,6 +25,8 @@ public partial class EditorWindow : Window
 
         vm.RequestFileDialog += ShowFileDialogAsync;
 
+        DialogService.Instance.window = this;
+
     }
     private async Task<string[]?> ShowFileDialogAsync()
     {
@@ -33,5 +36,7 @@ public partial class EditorWindow : Window
         };
         return await dialog.ShowAsync(this);
     }
+
+
 }
 

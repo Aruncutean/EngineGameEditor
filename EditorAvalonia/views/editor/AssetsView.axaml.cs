@@ -36,9 +36,7 @@ public partial class AssetsView : UserControl
             if (asset.Model.Type == AssetType.Folder)
             {
                 assetsViewModel.OpenFolder();
-
             }
-            else
             if (asset.Model.Type == AssetType.Mesh)
             {
                 assetsViewModel.OnAssetSelected();

@@ -23,6 +23,7 @@
 		<PackageReference Include="Dock.Avalonia" Version="11.2.0.2" />
 		<PackageReference Include="Dock.Model.Mvvm" Version="11.2.0.2" />
 		<PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
+
 		<PackageReference Include="ReactiveUI" Version="20.2.45" />
 		<PackageReference Include="Semi.Avalonia" Version="11.2.1.6" />
 		<PackageReference Include="Semi.Avalonia.ColorPicker" Version="11.2.1.6" />
@@ -63,7 +64,16 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</AvaloniaResource>
 		<AvaloniaResource Update="assets\geometry.png">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Update="assets\image.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Update="assets\spotlight.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Update="assets\sun.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</AvaloniaResource>
 	</ItemGroup>
 
@@ -74,10 +84,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EditorConfigFiles Remove="C:\Users\arunc\Desktop\GameEditor\EditorAvalonia\.editorconfig" />
+		<EditorConfigFiles Remove="C:\Users\arunc\Desktop\GameEditor\EditorAvalonia\.editorconfig" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="C:\Users\arunc\Desktop\GameEditor\EditorAvalonia\.editorconfig" />
+		<None Include="C:\Users\arunc\Desktop\GameEditor\EditorAvalonia\.editorconfig" />
 	</ItemGroup>
 </Project>

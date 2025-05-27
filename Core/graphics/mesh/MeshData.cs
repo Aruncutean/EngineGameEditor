@@ -7,11 +7,11 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Core.models
+namespace Core.graphics.mesh
 {
     public class MeshData
     {
-        public string Id {  get; set; } = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");
+        public string Id { get; set; } = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");
 
         public List<Vector3> Positions { get; set; } = new();
 

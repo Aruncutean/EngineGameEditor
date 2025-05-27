@@ -16,8 +16,15 @@ namespace Core.graphics.shader
         {
             _gl = gl;
         }
+        public static void LoadShaders(GL gl)
+        {
+            Init(gl);
+            Load(ShaderTypes.Basic, "shader/basic.vert.glsl", "shader/basic.frag.glsl");
+            Load(ShaderTypes.gizmo, "shader/gizmo.vert.glsl", "shader/gizmo.frag.glsl");
+            Load(ShaderTypes.Phong, "shader/phong.vert.glsl", "shader/phong.frag.glsl");
+        }
 
-        public static uint Load(ShaderTypes id, string vertexPath, string fragmentPath)
+        private static uint Load(ShaderTypes id, string vertexPath, string fragmentPath)
         {
             if (_shaders.ContainsKey(id))
                 return _shaders[id];

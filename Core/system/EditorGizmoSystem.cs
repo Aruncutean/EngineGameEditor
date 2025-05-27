@@ -1,10 +1,13 @@
 ﻿using Core.component;
 using Core.entity;
 using Core.gizmo;
+using Core.graphics.light;
 using Core.graphics.shader;
-using Core.graphics.texture;
+using Core.process;
 using Core.scene;
+using Core.services;
 using Silk.NET.OpenGL;
+using Silk.NET.Windowing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,33 +15,32 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using Texture = Core.graphics.texture.Texture;
+using Texture = Core.graphics.material.texture.Texture;
 
 namespace Core.system
 {
     public class EditorGizmoSystem
     {
-
-        private uint _gizmoShader;
-
         private uint pointOfLightIcon = 0;
+        private uint directLightIcon = 0;
+        private uint spotLightIcon = 0;
+
         private CameraSystem _cameraSystem;
-        public int screenWidth { get; set; } = 800;
-        public int screenHeight { get; set; } = 600;
+
         public Entity cameraEntity { get; set; }
 
         public GL gl;
         public EditorGizmoSystem(GL gl)
         {
-
             this.gl = gl;
-            _gizmoShader = ShaderManager.Get(ShaderTypes.gizmo);
+
             _cameraSystem = new CameraSystem();
             var texture = new Texture();
             pointOfLightIcon = texture.LoadTexture(gl, "assets/bulb.png");
-
+            directLightIcon = texture.LoadTexture(gl, "assets/sun.png");
+            spotLightIcon = texture.LoadTexture(gl, "assets/spotlight.png");
         }
-        public void Render(Scene scene)
+        public void Render(World scene)
         {
 
             if (cameraEntity == null) return;
@@ -51,16 +53,18 @@ namespace Core.system
                 return;
             }
             var view = _cameraSystem.GetViewMatrix(transform, camera);
-            var projection = _cameraSystem.GetProjectionMatrix(camera, (float)screenWidth / screenHeight);
+            var projection = _cameraSystem.GetProjectionMatrix(camera, (float)WindowsService.Instance.Width / WindowsService.Instance.Height);
 
+            LightProcessor lightProcessor = new LightProcessor();
 
-            foreach (var entity in scene.Entities.ToList())
+            List<Entity> entities = lightProcessor.GetLights(scene);
+
+            foreach (var entity in entities)
             {
                 var transformComponent = entity.GetComponent<TransformComponent>();
-                var shaderComponent = entity.GetComponent<ShaderComponent>();
                 var lightComponent = entity.GetComponent<LightComponent>();
 
-                if (lightComponent != null && transformComponent != null && shaderComponent != null)
+                if (lightComponent != null && transformComponent != null)
                 {
 
 
@@ -73,7 +77,6 @@ namespace Core.system
     };
                     uint[] indices = { 0, 1, 2, 2, 3, 0 };
 
-                    // 🔧 Gen VAO + VBO + EBO (poți să îl reții static)
                     uint vao = gl.GenVertexArray();
                     uint vbo = gl.GenBuffer();
                     uint ebo = gl.GenBuffer();
@@ -86,7 +89,6 @@ namespace Core.system
                     gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, ebo);
                     gl.BufferData<uint>(BufferTargetARB.ElementArrayBuffer, indices, BufferUsageARB.StaticDraw);
 
-                    // Vertex layout
                     gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
                     gl.EnableVertexAttribArray(0);
 
@@ -95,19 +97,32 @@ namespace Core.system
 
                     gl.BindVertexArray(0);
 
-                    // 📐 Creează billboard matrix
                     var model = Matrix4x4.CreateBillboard(transformComponent.Position, transform.Position, camera.Up, camera.Front);
 
-                    // 🧠 Setează shaderul și matricile
-                    uint shaderProgram = ShaderManager.Get(shaderComponent.shaderType);
+                    uint shaderProgram = ShaderManager.Get(ShaderTypes.gizmo);
                     gl.UseProgram(shaderProgram);
                     var binder = new ShaderBinder(gl, new ShaderProgram(shaderProgram));
                     binder.SetMat4("uModel", model);
                     binder.SetMat4("uView", view);
                     binder.SetMat4("uProjection", projection);
 
-                    // 💡 Poți seta și textură aici, dacă ai
-                    gl.BindTexture(TextureTarget.Texture2D, pointOfLightIcon);
+
+                    gl.ActiveTexture(TextureUnit.Texture0);
+
+
+                    if (lightComponent.Type == LightType.Direct)
+                    {
+                        gl.BindTexture(TextureTarget.Texture2D, directLightIcon);
+                    }
+                    else if (lightComponent.Type == LightType.Spot)
+                    {
+                        gl.BindTexture(TextureTarget.Texture2D, spotLightIcon);
+                    }
+                    else
+                    {
+                        gl.BindTexture(TextureTarget.Texture2D, pointOfLightIcon);
+                    }
+
 
                     gl.Enable(GLEnum.Blend);
                     gl.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
@@ -118,10 +133,6 @@ namespace Core.system
                         gl.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, null);
                     }
                     gl.BindVertexArray(0);
-
-                    //float size = 0.25f;
-                    //GizmoPrimitives.DrawLine(gl, new Vector3(transformComponent.Position.X, 0f, transformComponent.Position.Z), transformComponent.Position, lightComponent.Color);
-                    //GizmoPrimitives.DrawCircle(gl, transformComponent.Position, size, new Vector3(1, 1, 0));
                 }
             }
         }

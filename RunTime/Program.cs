@@ -4,12 +4,19 @@ using Core.graphics.shader;
 using Core.IO;
 using Core.models;
 using Core.scene;
+using Core.services;
 using Core.system;
 using Silk.NET.Input;
+using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System.IO;
 using System.Numerics;
+using Silk.NET.Input;
+using Silk.NET.Maths;
+using Silk.NET.OpenGL;
+using Silk.NET.Windowing;
+using System;
 
 namespace RunTime
 {
@@ -20,20 +27,22 @@ namespace RunTime
         private static bool isEditMode = false;
         private static string curentScene = string.Empty;
         private static RenderSystem renderSystem;
-        private static Scene scene;
+        private static World scene;
         private static IInputContext _input;
         private static CameraControllerSystemRunTime cameraControllerSystem;
         private static Entity _cameraEntity;
+
+        private static WorldManager _worldSystem;
+        private static ProjectData projectData;
+        private static string? path = null;
         static void Main(string[] args)
         {
-            string? path = null;
 
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i] == "--edit")
                 {
                     isEditMode = true;
-
                 }
                 else
                 if (args[i] == "--scene" && i + 1 < args.Length)
@@ -49,6 +58,8 @@ namespace RunTime
 
             path ??= Directory.GetCurrentDirectory();
 
+
+            path = "C:\\Users\\arunc\\Desktop\\New folder (2)\\Project";
             Console.WriteLine($"Project path: {path}");
             Console.WriteLine($"Edit mode: {isEditMode}");
             Console.WriteLine($"Scene path: {curentScene}");
@@ -56,14 +67,14 @@ namespace RunTime
             ProjectIO projectIO = new ProjectIO();
 
             ProjectData projectData = projectIO.LoadProject(Path.Combine(path, "project.json"));
-
+            DataService.Instance.ProjectData = projectData;
             if (projectData == null)
             {
                 Console.WriteLine("Project data is null");
                 return;
             }
 
-            if(curentScene == string.Empty)
+            if (curentScene == string.Empty)
             {
                 curentScene = projectData.MainScene;
             }
@@ -73,12 +84,11 @@ namespace RunTime
                 Console.WriteLine("No scene selected");
                 return;
             }
-            
 
             SceneIO sceneIO = new SceneIO();
             scene = sceneIO.LoadScene(Path.Combine(path, "scenes", curentScene));
 
-            if(scene == null)
+            if (scene == null)
             {
                 Console.WriteLine("Scene data is null");
                 return;
@@ -92,9 +102,6 @@ namespace RunTime
                 Console.WriteLine($"Scene last updated at: {scene.LastUpdated}");
             }
 
-
-
-
             var options = WindowOptions.Default with
             {
                 Size = new Silk.NET.Maths.Vector2D<int>(800, 600),
@@ -107,6 +114,7 @@ namespace RunTime
             window.Render += OnRender;
             window.Update += OnUpdate;
             window.Closing += OnClose;
+            window.Resize += OnResize;
 
             window.Run();
         }
@@ -115,58 +123,96 @@ namespace RunTime
         {
             gl = GL.GetApi(window);
 
-            _input = window.CreateInput();
-            IMouse mouse = _input.Mice[0];
-          
-            mouse.Cursor.CursorMode = CursorMode.Disabled;
+            WindowsService.Instance.Width = 800;
+            WindowsService.Instance.Height = 600;
 
-            ShaderManager.Init(gl);
-            ShaderManager.Load("basic", "shader/basic.vert.glsl", "shader/basic.frag.glsl");
+            _worldSystem = new WorldManager(projectData);
+            _worldSystem.isEditMode = false;
+            _worldSystem.renderInFrameBuffer = false;
+            _worldSystem.Init(gl);
 
-            gl.ClearColor(0.1f, 0.1f, 0.3f, 1.0f);
-
-            _cameraEntity = new Entity();
-            _cameraEntity.AddComponent(new TransformComponent
+            if (path != null)
             {
-                Position = new Vector3(0, 0, 5),
-                Rotation = System.Numerics.Quaternion.Identity
-            });
-            _cameraEntity.AddComponent(new CameraComponent { IsMainCamera = true });
-            _cameraEntity.AddComponent(new CameraControllerComponent { MoveSpeed = 5f });
+                _worldSystem.LoadWorld(Path.Combine(path, "scenes", curentScene));
+            }
 
-            renderSystem = new RenderSystem();
-            cameraControllerSystem = new CameraControllerSystemRunTime(_input);
-            renderSystem.cameraEntity = _cameraEntity;
+
+            var input = window.CreateInput();
+
+
+            foreach (var keyboard in input.Keyboards)
+            {
+                keyboard.KeyDown += (kb, key, code) =>
+                {
+
+                    _worldSystem._cameraControllerSystem?.OnKeyDown(key);
+
+                    if (key == Key.Escape)
+                        window.Close();
+                };
+
+                keyboard.KeyUp += (kb, key, code) =>
+                {
+                    _worldSystem._cameraControllerSystem?.OnKeyUp(key);
+                };
+            }
+
+            foreach (var mouseDevice in input.Mice)
+            {
+
+                mouseDevice.MouseUp += (m, btn) =>
+                {
+                    bool isLeftButton = btn == MouseButton.Left;
+                    _worldSystem._cameraControllerSystem?.mousePresss(!isLeftButton);
+                };
+
+                mouseDevice.MouseDown += (m, btn) =>
+                {
+                    bool isLeftButton = btn == MouseButton.Left;
+                    _worldSystem._cameraControllerSystem?.mousePresss(isLeftButton);
+                };
+
+                mouseDevice.Scroll += (m, scroll) =>
+                {
+                    Console.WriteLine($"Scroll: {scroll}");
+                };
+
+                mouseDevice.MouseMove += (m, pos) =>
+                {
+                    _worldSystem._cameraControllerSystem?.OnMouseMove(new Vector2((float)pos.X, (float)pos.Y));
+                };
+            }
         }
 
         private static void OnRender(double delta)
         {
-            gl.Clear((uint)(ClearBufferMask.ColorBufferBit));
 
-           gl.ClearColor(0.2f, 0.2f, 0.4f, 1.0f);
-            gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-
-            if (scene != null)
-            {
-                renderSystem.Render(scene, gl);
-            }
+            _worldSystem.Render((float)delta);
         }
 
         private static void OnUpdate(double delta)
         {
-            if (cameraControllerSystem != null)
+            if (_worldSystem != null)
             {
-                if (scene != null)
-                {
-                    cameraControllerSystem.Update((float)delta, _cameraEntity);
-                }
+                _worldSystem.Update((float)delta);
             }
         }
 
+
+        private static void OnResize(Vector2D<int> newSize)
+        {
+            Console.WriteLine($"New window size: {newSize.X} x {newSize.Y}");
+            WindowsService.Instance.Width = newSize.X;
+            WindowsService.Instance.Height = newSize.Y;
+
+            _worldSystem.Resize(newSize.X, newSize.Y);
+
+        }
+
+
         private static void OnClose()
         {
-            Console.WriteLine("🟡 Window is closing.");
+            Console.WriteLine("Window is closing.");
         }
     }
 }

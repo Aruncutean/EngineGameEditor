@@ -1,4 +1,5 @@
 ﻿using Core.entity;
+using Core.graphics.material;
 using Core.models;
 using Core.scene;
 using EditorAvalonia.models;
@@ -17,14 +18,14 @@ namespace EditorAvalonia.service
 
         public event Action<Entity>? EntityAdded;
         public event Action<Entity>? EntityRemoved;
-        public event Action<Scene>? SceneChanged;
+        public event Action<World>? SceneChanged;
         public event Action<EntityView>? SelectedEntityChanged;
         public event Action<string>? refreshListAction;
         public event Action<MaterialBase>? EditMaterialAction;
         public ProjectInfo? ProjectInfo { get; set; }
         public ProjectData? ProjectData { get; set; }
         public SceneInfo? CurentScene { get; set; }
-        public Scene? Scene { get; set; }
+        public World? Scene { get; set; }
 
         public EntityView? SelectedEntity { get; set; }
 
@@ -46,7 +47,7 @@ namespace EditorAvalonia.service
             EntityRemoved?.Invoke(e);
         }
 
-        public void SetScene(Scene scene)
+        public void SetScene(World scene)
         {
             Scene = scene;
             SceneChanged?.Invoke(scene);

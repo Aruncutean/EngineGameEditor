@@ -61,7 +61,6 @@ namespace EditorAvalonia.viewmodels
             {
                 _selectedProject = value;
                 OnPropertyChanged(nameof(SelectedProject));
-                OnProjectSelected();
             }
         }
 
@@ -82,18 +81,14 @@ namespace EditorAvalonia.viewmodels
             Projects.Clear();
             foreach (var projectInfo in projectInfos)
             {
-                Projects.Add(projectInfo);
+                Projects.Add(new ProjectInfo(projectInfo, DeleteProject));
             }
         }
 
-        public void OnProjectSelected()
+        private void DeleteProject(ProjectInfo projectInfo)
         {
-            StoreService.GetInstance().ProjectInfo = SelectedProject;
-            _projectService.loadProjectData(SelectedProject.Path);
-            Scene scene = new Scene();
-            scene.Show();
-
-            CloseThisWindow();
+            _projectService.removeProject(projectInfo.Name);
+            Projects.Remove(projectInfo);
         }
 
 
@@ -109,9 +104,18 @@ namespace EditorAvalonia.viewmodels
             }
         }
 
+        public void OpenProject()
+        {
+            StoreService.GetInstance().ProjectInfo = SelectedProject;
+            _projectService.loadProjectData(SelectedProject.Path);
+            Scene scene = new Scene();
+            scene.Show();
+
+            CloseThisWindow();
+        }
+
         public void SaveProject()
         {
-
             ProjectInfo projectInfo = _projectService.CreateProject(ProjectName, PathProject);
 
             StoreService.GetInstance().ProjectInfo = projectInfo;

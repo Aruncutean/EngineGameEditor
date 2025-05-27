@@ -27,6 +27,11 @@ namespace Core.models
         [JsonPropertyName("createdAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
     }
 
     public enum AssetType

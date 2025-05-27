@@ -18,15 +18,15 @@ namespace EditorAvalonia.views.project;
 
 public partial class ProjectPage : Window
 {
-
+    public ProjectViewModel ViewModel;
     public ProjectPage()
     {
         InitializeComponent();
-        var vm = new ProjectViewModel();
-        vm.RequestFolderDialog += ShowFolderDialogAsync;
+        ViewModel = new ProjectViewModel();
+        ViewModel.RequestFolderDialog += ShowFolderDialogAsync;
 
-        vm.CloseThisWindow += CloseThisWindow;
-        DataContext = vm;
+        ViewModel.CloseThisWindow += CloseThisWindow;
+        DataContext = ViewModel;
     }
 
     private Task CloseThisWindow()
@@ -42,5 +42,11 @@ public partial class ProjectPage : Window
             Title = "Selectează un folder"
         };
         return await dialog.ShowAsync(this);
+    }
+    private void Asset_DoubleTapped(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+
+        ViewModel.OpenProject();
+
     }
 }

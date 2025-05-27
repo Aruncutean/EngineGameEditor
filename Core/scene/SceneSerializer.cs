@@ -10,7 +10,7 @@ namespace Core.scene
 {
     public class SceneSerializer
     {
-        public static void SaveScene(string path, Scene scene)
+        public static void SaveScene(string path, World scene)
         {
             var json = JsonSerializer.Serialize(scene, new JsonSerializerOptions
             {
@@ -21,10 +21,10 @@ namespace Core.scene
             File.WriteAllText(path, json);
         }
 
-        public static Scene LoadScene(string path)
+        public static World LoadScene(string path)
         {
             var json = File.ReadAllText(path);
-            return JsonSerializer.Deserialize<Scene>(json, new JsonSerializerOptions
+            return JsonSerializer.Deserialize<World>(json, new JsonSerializerOptions
             {
                 Converters = { new ComponentConverter() }
             })!;

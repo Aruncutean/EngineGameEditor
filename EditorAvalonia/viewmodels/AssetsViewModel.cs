@@ -23,6 +23,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Assimp;
+using Core.graphics.material;
 
 
 namespace EditorAvalonia.viewmodels
@@ -121,6 +122,42 @@ namespace EditorAvalonia.viewmodels
             return name;
         }
 
+        public void AddNewTexture()
+        {
+            _ = DialogService.Instance.OpenFileDialog("Dialog",
+             new[] { "png", "jpg", "jpeg" }, (result) =>
+                 {
+                     if (result != null)
+                     {
+                         string fileName = Path.GetFileName(result);
+                         string name = GetUniqueMaterialPath(CurrentFolder, fileName);
+                         var assetItem = new AssetItem
+                         {
+                             Name = name,
+                             Type = AssetType.Texture,
+                             Path = Path.Combine(CurrentFolder, name),
+                             BaseDirector = CurrentFolder
+                         };
+
+                         var assetCollection = StoreService.GetInstance().AssetCollection;
+                         if (assetCollection?.Assets != null)
+                         {
+                             assetCollection.Assets.Add(assetItem);
+                             var assetItemView = new AssetItemView(assetItem);
+                             Assets.Add(assetItemView);
+                         }
+
+                         string destinatieFolder = Path.Combine(StoreService.GetInstance().ProjectInfo.Path, CurrentFolder);
+                         string destinatiePath = Path.Combine(destinatieFolder, fileName);
+
+                         File.Copy(result, destinatiePath, overwrite: true);
+
+                         AssetsService assetsService = new AssetsService();
+                         assetsService.SaveAssets();
+                     }
+                 });
+        }
+
         public void AddNewMaterial()
         {
             string name = GetUniqueMaterialPath(CurrentFolder, "NewMaterial");
@@ -141,28 +178,25 @@ namespace EditorAvalonia.viewmodels
             }
 
 
-            MaterialBase material = new PhongMaterial
+            MaterialBase material = new MaterialPhong
             {
-                DiffuseColor = new(1, 0, 0),
-                Shininess = 64.0f
+                Id = assetItem.Id,
+                Name = name,
+                Path = assetItem.Path,
             };
-
 
             MaterialIO materialIO = new MaterialIO();
             materialIO.Save(Path.Combine(StoreService.GetInstance().ProjectInfo.Path, assetItem.Path), material);
 
 
-            AssetsService assetsService = new AssetsService();
-            assetsService.SaveAssets();
         }
 
         public void OnAssetSelected()
         {
             if (SelectedAsset != null)
             {
-
-                var shaderComponent = new ShaderComponent();
-                shaderComponent.shaderType = ShaderTypes.Basic;
+                var shaderComponent = new MaterialComponent();
+                shaderComponent.MaterialID = "default";
 
                 var transformComponent = new TransformComponent();
                 transformComponent.Position = new Vector3(0, 0, 0);
@@ -171,14 +205,11 @@ namespace EditorAvalonia.viewmodels
                 var meshComponent = new MeshComponent();
                 meshComponent.MeshPath = SelectedAsset.Model.Path;
 
-                var materialComponent = new MaterialComponent();
-
                 Entity entity = new Entity();
-
                 entity.AddComponent(shaderComponent);
                 entity.AddComponent(meshComponent);
                 entity.AddComponent(transformComponent);
-                entity.AddComponent(materialComponent);
+
 
                 StoreService.GetInstance().AddEntity(entity);
                 //    await Task.Delay(50);
@@ -213,6 +244,7 @@ namespace EditorAvalonia.viewmodels
 
 
             var assetCollection = StoreService.GetInstance().AssetCollection;
+
             if (assetCollection?.Assets != null)
             {
                 assetCollection.Assets.Add(folder);

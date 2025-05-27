@@ -101,7 +101,7 @@ namespace EditorAvalonia.viewmodels
                     _sceneService.addSceneInfo(info);
                     Scenes.Add(info);
 
-                    Scene scene = new Scene
+                    World scene = new World
                     {
                         Name = info.Name,
                         Path = info.Path,

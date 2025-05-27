@@ -27,9 +27,8 @@ namespace Core.component
                     nameof(TransformComponent) => kvp.Value.Deserialize<TransformComponent>(options),
                     nameof(CameraComponent) => kvp.Value.Deserialize<CameraComponent>(options),
                     nameof(MeshComponent) => kvp.Value.Deserialize<MeshComponent>(options),
-                    nameof(ShaderComponent) => kvp.Value.Deserialize<ShaderComponent>(options),
-                    nameof(LightComponent) => kvp.Value.Deserialize<LightComponent>(options),
                     nameof(MaterialComponent) => kvp.Value.Deserialize<MaterialComponent>(options),
+                    nameof(LightComponent) => kvp.Value.Deserialize<LightComponent>(options),
                     nameof(CameraControllerComponent) => kvp.Value.Deserialize<CameraControllerComponent>(options),
                     _ => null
                 };

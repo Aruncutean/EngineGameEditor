@@ -8,14 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.graphics.texture
+namespace Core.graphics.material.texture
 {
     public class Texture
     {
         public uint LoadTexture(GL gl, string path)
         {
             using var image = Image.Load<Rgba32>(path);
-            image.Mutate(x => x.Flip(FlipMode.Vertical)); // OpenGL origin is bottom-left
+            image.Mutate(x => x.Flip(FlipMode.Vertical));
 
             var pixels = new byte[image.Width * image.Height * 4];
             image.CopyPixelDataTo(pixels);
@@ -29,7 +29,7 @@ namespace Core.graphics.texture
                 {
                     gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba,
                         (uint)image.Width, (uint)image.Height, 0,
-                        Silk.NET.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, data);
+                        PixelFormat.Rgba, PixelType.UnsignedByte, data);
                 }
             }
 

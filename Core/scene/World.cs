@@ -7,7 +7,7 @@ using Core.entity;
 
 namespace Core.scene
 {
-    public class Scene
+    public class World
     {
         public List<Entity> Entities { get; set; } = new();
         public string Name { get; set; } = string.Empty;
@@ -15,12 +15,13 @@ namespace Core.scene
         public DateTime CreatedAt { get; set; }
         public DateTime LastUpdated { get; set; }
 
-        public Scene()
+        public World()
         {
 
         }
 
-        public void AddEntity(Entity e) {
+        public void AddEntity(Entity e)
+        {
             Entities.Add(e);
             LastUpdated = DateTime.Now;
 

@@ -14,9 +14,10 @@ namespace Core.IO
         public SceneIO() { }
 
 
-        public void SaveScene(string path, Scene scene)
+        public void SaveScene(string path, World scene)
         {
-            var json = JsonSerializer.Serialize(scene, new JsonSerializerOptions {
+            var json = JsonSerializer.Serialize(scene, new JsonSerializerOptions
+            {
                 WriteIndented = true,
                 Converters = {
                     new Vector3Converter(),
@@ -27,10 +28,10 @@ namespace Core.IO
             File.WriteAllText(path, json);
         }
 
-        public Scene LoadScene(string path)
+        public World LoadScene(string path)
         {
             var json = File.ReadAllText(path);
-            return  JsonSerializer.Deserialize<Scene>(json, new JsonSerializerOptions
+            return JsonSerializer.Deserialize<World>(json, new JsonSerializerOptions
             {
                 Converters = {
                     new ComponentConverter(),

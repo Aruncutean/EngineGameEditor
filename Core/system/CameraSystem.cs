@@ -10,7 +10,7 @@ namespace Core.system
 {
     public class CameraSystem
     {
-        public Matrix4x4 GetViewMatrix(TransformComponent transform,CameraComponent cameraComponent)
+        public Matrix4x4 GetViewMatrix(TransformComponent transform, CameraComponent cameraComponent)
         {
             return Matrix4x4.CreateLookAt(transform.Position, transform.Position + cameraComponent.Front, cameraComponent.Up);
         }

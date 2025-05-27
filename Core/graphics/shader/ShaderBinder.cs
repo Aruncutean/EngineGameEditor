@@ -37,6 +37,9 @@ namespace Core.graphics.shader
         public void SetInt(string name, int value)
             => _gl.Uniform1(GetLocation(name), value);
 
+        public void SetUInt(string name, uint value)
+      => _gl.Uniform1(GetLocation(name), value);
+
         public void SetVec3(string name, System.Numerics.Vector3 vec)
             => _gl.Uniform3(GetLocation(name), vec.X, vec.Y, vec.Z);
 
@@ -62,5 +65,7 @@ namespace Core.graphics.shader
                 }
             }
         }
+
+
     }
 }

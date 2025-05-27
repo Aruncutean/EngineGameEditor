@@ -1,5 +1,7 @@
 ﻿using Core.assets;
+using Core.graphics.mesh;
 using Core.models;
+using Core.services;
 using EditorAvalonia.models;
 using System;
 using System.Collections.Generic;
@@ -40,9 +42,8 @@ namespace EditorAvalonia.service
                     else
                     {
                         storeService.AssetCollection = assetManager.loadAsset(Path.Combine(projectPath, assetPathFile));
+                        DataService.Instance.AssetCollection = storeService.AssetCollection;
                     }
-
-
                 }
             }
             catch (FileNotFoundException)

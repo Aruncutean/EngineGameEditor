@@ -11,6 +11,7 @@ namespace Core.models
         public string Name { get; set; } = string.Empty;
         public string Version { get; set; } = "1.0";
         public string MainScene { get; set; } = string.Empty;
+        public string Path { get; set; } = string.Empty;
         public List<SceneInfo> Scenes { get; set; } = new();
 
     }

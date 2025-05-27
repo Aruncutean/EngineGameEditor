@@ -1,5 +1,4 @@
 ﻿using Core.component;
-using Core.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Core.graphics.mesh
 {
-    public static  class MeshRegistry
+    public static class MeshRegistry
     {
         private static Dictionary<string, MeshData> _loadedMeshes = new();
 
@@ -18,7 +17,6 @@ namespace Core.graphics.mesh
             if (_loadedMeshes.TryGetValue(meshPath, out var mesh))
                 return mesh;
 
-            // Încarcă mesh-ul din fișier
             var json = File.ReadAllText(meshPath);
             var options = new JsonSerializerOptions
             {

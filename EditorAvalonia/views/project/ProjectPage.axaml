@@ -1,13 +1,17 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        xmlns:vm="clr-namespace:EditorAvalonia.viewmodels"
-		x:DataType="vm:ProjectViewModel"
-		x:Class="EditorAvalonia.views.project.ProjectPage"
-		xmlns:local="clr-namespace:EditorAvalonia"
-        Title="ProjectPage">
+<Window
+    x:Class="EditorAvalonia.views.project.ProjectPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:EditorAvalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:EditorAvalonia.viewmodels"
+    Title="ProjectPage"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+	Background="#181818"
+    x:DataType="vm:ProjectViewModel"
+    mc:Ignorable="d">
 
 
 	<Window.DataContext>
@@ -16,36 +20,73 @@
 
 	<StackPanel>
 		<StackPanel>
-			<Grid Margin="10"
-				  ColumnDefinitions="100,*,*"
-				  RowDefinitions="Auto,Auto,Auto">
-				<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,10,10,5" Text="Name:"/>
-				<TextBox  Text="{Binding ProjectName, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Margin="0,0,10,5" Watermark="Project name"/>
-				<TextBlock Grid.Row="1" Grid.Column="0" Margin="0,10,10,5" Text="Project Path"/>
-				<TextBox  Text="{Binding PathProject, Mode=TwoWay}"  IsEnabled="False" Grid.Row="1" Grid.Column="1" Margin="0,0,10,5" Watermark="Project Path"/>
-				<Button Command="{Binding GetProjectPath}" Grid.Row="1" Grid.Column="2" Margin="0,0,0,5" Content="Open" />
+
+			<Grid
+                Margin="10"
+                ColumnDefinitions="100,*,*"
+                RowDefinitions="Auto,Auto,Auto">
+				<TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,10,10,5"
+                    Text="Name:" />
+				<TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="0,0,10,5"
+                    Text="{Binding ProjectName, Mode=TwoWay}"
+                    Watermark="Project name" />
+				<TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="0,10,10,5"
+                    Text="Project Path" />
+				<TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,0,10,5"
+                    IsEnabled="False"
+                    Text="{Binding PathProject, Mode=TwoWay}"
+                    Watermark="Project Path" />
+				<Button
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="0,0,0,5"
+                    Command="{Binding GetProjectPath}"
+                    Content="Open" />
 			</Grid>
 
 		</StackPanel>
 		<StackPanel Margin="10">
-			<TextBlock Margin="0 5">Choose an animal:</TextBlock>
+			<TextBlock Margin="0,5">Choose an animal:</TextBlock>
 			<ListBox ItemsSource="{Binding Projects}"
-                     SelectedItem="{Binding SelectedProject}" >
+					 SelectedItem="{Binding SelectedProject}"
+					 DoubleTapped="Asset_DoubleTapped"
+					 >
 				<ListBox.ItemTemplate>
 					<DataTemplate x:DataType="local:models.ProjectInfo">
 						<StackPanel>
-							<TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+							<TextBlock FontWeight="Bold" Text="{Binding Name}" />
+							<StackPanel.ContextMenu>
+								<ContextMenu>
+									<MenuItem Command="{Binding DeleteCommand}" Header="Delete" />
+								</ContextMenu>
+							</StackPanel.ContextMenu>
 						</StackPanel>
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
 		</StackPanel>
 		<DockPanel Margin="10">
-			<Button Content="Create New Project"
-					HorizontalAlignment="Right"
-				    Command="{Binding SaveProject}"
-					DockPanel.Dock="Right" />
+			<Button
+                HorizontalAlignment="Right"
+                Command="{Binding SaveProject}"
+                Content="Create New Project"
+                DockPanel.Dock="Right" />
 		</DockPanel>
+
+
 	</StackPanel>
+
 
 </Window>

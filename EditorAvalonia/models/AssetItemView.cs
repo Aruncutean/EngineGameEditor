@@ -64,6 +64,7 @@ namespace EditorAvalonia.models
                 AssetType.Folder => new Uri("avares://EditorAvalonia/assets/folder.png"),
                 AssetType.Mesh => new Uri("avares://EditorAvalonia/assets/geometry.png"),
                 AssetType.Material => new Uri("avares://EditorAvalonia/assets/material.png"),
+                AssetType.Texture => new Uri("avares://EditorAvalonia/assets/image.png"),
                 _ => new Uri("avares://EditorAvalonia/assets/block.png")
             };
             return new Bitmap(AssetLoader.Open(uri));
