@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Core.component;
 using Core.entity;
+using Core.graphics.mesh;
 using Core.graphics.shader;
 using Core.process;
 using Core.scene;
@@ -44,11 +46,12 @@ namespace Core.system
 
             var lights = _lightProcessor.GetLights(scene);
             var renderables = _renderableProcessor.GetRenderables(scene);
-
+            Console.WriteLine(renderables.Count);
             foreach (var entity in renderables)
             {
-                _renderableProcessor.RenderEntity(entity, lights, view, projection, gl,transform);
+                _renderableProcessor.RenderEntity(entity, lights, view, projection, gl, transform);
             }
+
         }
     }
 }

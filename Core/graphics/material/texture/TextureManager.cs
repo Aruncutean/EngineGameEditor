@@ -1,4 +1,5 @@
 ﻿using Core.assets;
+using Core.component;
 using Core.IO;
 using Core.models;
 using Core.services;
@@ -18,24 +19,28 @@ namespace Core.graphics.material.texture
 
         public static uint Get(string id, GL gl)
         {
+
             if (id == null)
             {
+                Console.WriteLine("Texture null");
                 return 0;
             }
 
             if (_texture.ContainsKey(id))
             {
+                Console.WriteLine("Texture " + _texture[id]);
                 return _texture[id];
             }
             else
             {
-                MaterialIO materialIO = new MaterialIO();
                 ProjectData projectData = DataService.Instance.ProjectData;
                 if (projectData != null)
                 {
-                    string path = Path.Combine(projectData.Path, "assets/assets.json");
+                    string path = Path.Combine(projectData.Path, "Assets/assets.json");
                     AssetManager assetManager = new AssetManager();
                     AssetCollection assetCollection = assetManager.loadAsset(path);
+                    Console.WriteLine(assetCollection.Assets.Count);
+                    Console.WriteLine(id);
                     AssetItem? assetItem = assetCollection.Assets.FirstOrDefault(x => x.Id == id);
                     if (assetItem != null)
                     {
@@ -45,8 +50,10 @@ namespace Core.graphics.material.texture
                         _texture.Add(id, textureID);
                         return textureID;
                     }
+                    Console.WriteLine("Texture 0");
                 }
             }
+            Console.WriteLine("Texture 0");
             return 0;
         }
 

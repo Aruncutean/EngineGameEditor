@@ -11,21 +11,7 @@
     mc:Ignorable="d">
 	<Grid RowDefinitions="*, 1, *">
 		<local:EntityList Grid.Row="0" />
-		<GridSplitter
-            Grid.Row="1"
-            Background="#181818"
-            ResizeDirection="Rows" />
-		<Border
-            Grid.Row="2"
-            Margin="2"
-            Padding="6"
-            Background="#303030"
-            BorderThickness="1"
-            CornerRadius="8"
-            Effect="{StaticResource CardShadow}">
-			<ScrollViewer>
-				<StackPanel x:Name="myPanel" />
-			</ScrollViewer>
-		</Border>
+		<GridSplitter Grid.Row="1" />
+		<local:EntityEditor Grid.Row="2" />
 	</Grid>
 </UserControl>

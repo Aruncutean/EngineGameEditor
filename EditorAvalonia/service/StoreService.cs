@@ -16,13 +16,14 @@ namespace EditorAvalonia.service
     {
         private static readonly StoreService storeService = new();
 
+        public event Action closeEditorRender;
         public event Action<Entity>? EntityAdded;
         public event Action<Entity>? EntityRemoved;
         public event Action<World>? SceneChanged;
         public event Action<EntityView>? SelectedEntityChanged;
         public event Action<string>? refreshListAction;
         public event Action<MaterialBase>? EditMaterialAction;
-        public ProjectInfo? ProjectInfo { get; set; }
+        public ProjectInfoE? ProjectInfo { get; set; }
         public ProjectData? ProjectData { get; set; }
         public SceneInfo? CurentScene { get; set; }
         public World? Scene { get; set; }
@@ -33,6 +34,11 @@ namespace EditorAvalonia.service
         public static StoreService GetInstance()
         {
             return storeService;
+        }
+
+        public void CloseEditorRender()
+        {
+            closeEditorRender?.Invoke();
         }
 
         public void AddEntity(Entity e)

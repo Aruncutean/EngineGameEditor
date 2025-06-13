@@ -29,7 +29,7 @@ namespace EditorAvalonia.views.editor
 {
     public class OpenGLViewport : Image
     {
-
+        private bool _shouldClose = false;
         private IWindow? _window;
         private GL? _gl;
         private WriteableBitmap? _bitmap;
@@ -74,6 +74,8 @@ namespace EditorAvalonia.views.editor
 
         private async Task InitGLAsync()
         {
+            StoreService.GetInstance().closeEditorRender += WindowsClose;
+
             var options = WindowOptions.Default with
             {
                 API = new GraphicsAPI(ContextAPI.OpenGL, ContextProfile.Core, ContextFlags.Default, new APIVersion(3, 3)),
@@ -122,60 +124,88 @@ namespace EditorAvalonia.views.editor
 
             _window.Render += _ =>
             {
-                _worldSystem.Render((float)_);
 
-
-                _gl?.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-                _gl?.ClearColor(0.247f, 0.247f, 0.247f, 1.0f);
-
-                _gl.BindFramebuffer(FramebufferTarget.ReadFramebuffer, _worldSystem._frameBuffer.msFBO);
-                _gl.BindFramebuffer(FramebufferTarget.DrawFramebuffer, _worldSystem._frameBuffer._framebuffer);
-
-                _gl.BlitFramebuffer(
-                    0, 0, width, height,
-                    0, 0, width, height,
-                    ClearBufferMask.ColorBufferBit,
-                    BlitFramebufferFilter.Linear
-                );
-
-                _gl.BindFramebuffer(FramebufferTarget.Framebuffer, _worldSystem._frameBuffer._framebuffer);
-
-                byte[] pixels = new byte[width * height * 4];
-                _gl.ReadPixels(0, 0, (uint)width, (uint)height,
-                    Silk.NET.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, pixels.AsSpan());
-
-                _gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-
-                Dispatcher.UIThread.InvokeAsync(() =>
+                if (_worldSystem != null || _gl != null)
                 {
-                    _bitmap = new WriteableBitmap(
-                        new PixelSize(width, height),
-                        new Avalonia.Vector(96, 96),
-                        PixelFormat.Rgba8888,
-                        AlphaFormat.Unpremul
+
+                    _worldSystem.Render((float)_);
+
+
+                    _gl?.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                    _gl?.ClearColor(0.247f, 0.247f, 0.247f, 1.0f);
+
+                    _gl.BindFramebuffer(FramebufferTarget.ReadFramebuffer, _worldSystem._frameBuffer.msFBO);
+                    _gl.BindFramebuffer(FramebufferTarget.DrawFramebuffer, _worldSystem._frameBuffer._framebuffer);
+
+                    _gl.BlitFramebuffer(
+                        0, 0, width, height,
+                        0, 0, width, height,
+                        ClearBufferMask.ColorBufferBit,
+                        BlitFramebufferFilter.Linear
                     );
 
-                    using var fb = _bitmap.Lock();
-                    FlipImageVertically(pixels, width, height);
-                    Marshal.Copy(pixels, 0, fb.Address, pixels.Length);
+                    _gl.BindFramebuffer(FramebufferTarget.Framebuffer, _worldSystem._frameBuffer._framebuffer);
 
-                    Source = _bitmap;
-                });
+                    byte[] pixels = new byte[width * height * 4];
+                    _gl.ReadPixels(0, 0, (uint)width, (uint)height,
+                        Silk.NET.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, pixels.AsSpan());
+
+                    _gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+                    Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        _bitmap = new WriteableBitmap(
+                            new PixelSize(width, height),
+                            new Avalonia.Vector(96, 96),
+                            PixelFormat.Rgba8888,
+                            AlphaFormat.Unpremul
+                        );
+
+                        using var fb = _bitmap.Lock();
+                        FlipImageVertically(pixels, width, height);
+                        Marshal.Copy(pixels, 0, fb.Address, pixels.Length);
+
+                        Source = _bitmap;
+                    });
+                }
+                if (_shouldClose)
+                {
+
+                    _worldSystem = null;
+
+                    _bitmap = null;
+                    Dispatcher.UIThread.InvokeAsync(() => Source = null);
+                    _window?.Close();
+
+                    _window = null;
+
+                    _input?.Dispose();
+                    _input = null;
+
+                    _gl = null;
+
+                }
             };
 
             await Task.Run(() => _window.Run());
-        }
 
+
+
+        }
+        public void WindowsClose()
+        {
+            _shouldClose = true;
+        }
 
         private void OnKeyDown(object? sender, KeyEventArgs e)
         {
             this.Focus();
-            _worldSystem._cameraControllerSystem?.OnKeyDown(MapKey(e.Key));
+            //  _worldSystem._cameraControllerSystem?.OnKeyDown(MapKey(e.Key));
         }
 
         private void OnKeyUp(object? sender, KeyEventArgs e)
         {
-            _worldSystem._cameraControllerSystem?.OnKeyUp(MapKey(e.Key));
+            // _worldSystem._cameraControllerSystem?.OnKeyUp(MapKey(e.Key));
         }
 
         private void OnMouseUp(object? sender, PointerReleasedEventArgs e)

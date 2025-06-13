@@ -17,7 +17,7 @@ public partial class RightPanel : UserControl
     public RightPanel()
     {
         InitializeComponent();
-        StoreService.GetInstance().SelectedEntityChanged += OnEntitySelected;
+        // StoreService.GetInstance().SelectedEntityChanged += OnEntitySelected;
         StoreService.GetInstance().EditMaterialAction += OnEditMaterial;
     }
 
@@ -31,37 +31,37 @@ public partial class RightPanel : UserControl
 
     void UpdateMaterialUI(MaterialBase mat)
     {
-        myPanel.Children.Clear();
-        var control = ComponentViewGenerator.GenerateFor(mat, UpdateMaterialUI);
-        myPanel.Children.Add(control);
+        //myPanel.Children.Clear();
+        //var control = ComponentViewGenerator.GenerateFor(mat, UpdateMaterialUI);
+        //myPanel.Children.Add(control);
     }
     private void OnEntitySelected(EntityView entity)
     {
-        myPanel.Children.Clear();
-        if (entity != null)
-        {
-            myPanel.Children.Add(ComponentViewGenerator.GenereteFor(entity));
+        //myPanel.Children.Clear();
+        //if (entity != null)
+        //{
+        //    myPanel.Children.Add(ComponentViewGenerator.GenereteFor(entity));
 
-            foreach (var component in entity.Model.Components)
-            {
-                if (component.Value is LightComponent)
-                {
-                    var control = ComponentViewGenerator.GenereteForLight(component.Value);
-                    myPanel.Children.Add(control);
-                }
-                else
+        //    foreach (var component in entity.Model.Components)
+        //    {
+        //        if (component.Value is LightComponent)
+        //        {
+        //            var control = ComponentViewGenerator.GenereteForLight(component.Value);
+        //            myPanel.Children.Add(control);
+        //        }
+        //        else
 
-                if (component.Value is MeshComponent)
-                {
-                    continue;
-                }
-                else
-                {
-                    var control = ComponentViewGenerator.GenerateFor(component.Value);
-                    myPanel.Children.Add(control);
-                }
-            }
-        }
+        //        if (component.Value is MeshComponent)
+        //        {
+        //            continue;
+        //        }
+        //        else
+        //        {
+        //            var control = ComponentViewGenerator.GenerateFor(component.Value);
+        //            myPanel.Children.Add(control);
+        //        }
+        //    }
+        //}
 
     }
 }

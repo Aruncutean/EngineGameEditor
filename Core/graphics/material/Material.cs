@@ -1,4 +1,5 @@
-﻿using Core.graphics.shader;
+﻿using Core.component;
+using Core.graphics.shader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,9 @@ namespace Core.graphics.material
         public ColorOrTexture Ambient { get; set; } = new() { Color = "#ffffff" };
         public ColorOrTexture Diffuse { get; set; } = new() { Color = "#ffffff" };
         public ColorOrTexture Specular { get; set; } = new() { Color = "#ffffff" };
+
+
+        [JsonConverter(typeof(FloatConverter))]
         public float Shininess { get; set; } = 32.0f;
     }
 
@@ -52,6 +56,8 @@ namespace Core.graphics.material
     {
         public string? Color { get; set; }
         public string? TexturePath { get; set; }
+
+        [JsonConverter(typeof(BoolConverter))]
         public bool IsTexture { get; set; } = false;
 
     }

@@ -1,0 +1,308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\windows">
+      <UniqueIdentifier>{a2800ae8-1e15-44ae-bac8-5fa6f48ab947}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\model">
+      <UniqueIdentifier>{c58b0656-ac2f-436d-83fa-47cc431f1bfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\services">
+      <UniqueIdentifier>{a44c751e-bf45-491f-abd7-e8ebe023fd11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\context">
+      <UniqueIdentifier>{0954fb4b-98fa-495e-8905-f85b34f05b29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\context">
+      <UniqueIdentifier>{a45f9cd6-e748-48ff-bc48-e64b899123b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\windows\editor">
+      <UniqueIdentifier>{b8ced159-945e-4ea0-afa5-72f6bbf64d68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\assets">
+      <UniqueIdentifier>{69bdd4fa-5e35-4a6d-97a6-1eab6ec0c816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{4ccbb627-52c2-4b04-8092-f2668c43f78a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\esc">
+      <UniqueIdentifier>{1a52a35b-875a-4ad7-8911-0fadd79ca33e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\esc\system">
+      <UniqueIdentifier>{c9e0f284-2391-4c00-bcab-48d323a3e3e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\esc\entity">
+      <UniqueIdentifier>{5dc96198-fa9d-4db9-81fc-773357cc94cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\esc\component">
+      <UniqueIdentifier>{c51954c8-ca0f-41ea-bbcc-9079a1b898cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\gui">
+      <UniqueIdentifier>{1fe6f845-a83f-4928-9659-114d682dfe80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\gui\framebuffer">
+      <UniqueIdentifier>{31e8fb68-08ad-44aa-af13-067ea0e3f81d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\gui\mesh">
+      <UniqueIdentifier>{c6b18d7b-18aa-4663-b97f-81356f8d09d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\gui\material">
+      <UniqueIdentifier>{a7af5325-d8c7-4f7f-939c-e73504938340}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\gui\shader">
+      <UniqueIdentifier>{8534b2e5-2661-4802-8e6b-86564fbf3bec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\gui\texture">
+      <UniqueIdentifier>{c2394a39-c3f9-45de-9245-18d0a8a6ed12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\esc\process">
+      <UniqueIdentifier>{96a21f30-d73d-4b65-8df9-2cad2a49e5a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\serializer">
+      <UniqueIdentifier>{54d30f76-de9f-4deb-932a-299fc1f1a315}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\gui\light">
+      <UniqueIdentifier>{478cdb92-164a-48ce-8c9f-8506cbac9593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\service">
+      <UniqueIdentifier>{a1e19cf6-6ce6-4b44-81fa-119b863352e5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AppContext.cpp">
+      <Filter>Source Files\context</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRegistry.hpp">
+      <Filter>Header Files\core\gui\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetsService.cpp">
+      <Filter>Source Files\service</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.hpp">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneWindow.hpp">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectService.hpp">
+      <Filter>Header Files\services</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectInfo.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="AppContext.h">
+      <Filter>Header Files\context</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorWindow.hpp">
+      <Filter>Header Files\windows\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectData.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneInfo.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneService.hpp">
+      <Filter>Header Files\services</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneData.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetsWindow.hpp">
+      <Filter>Header Files\windows\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewSceneWindow.hpp">
+      <Filter>Header Files\windows\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditWindow.hpp">
+      <Filter>Header Files\windows\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetsService.hpp">
+      <Filter>Header Files\services</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetItem.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.hpp">
+      <Filter>Header Files\core\esc\component</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialComponent.hpp">
+      <Filter>Header Files\core\esc\component</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshComponent.hpp">
+      <Filter>Header Files\core\esc\component</Filter>
+    </ClInclude>
+    <ClInclude Include="LightComponent.hpp">
+      <Filter>Header Files\core\esc\component</Filter>
+    </ClInclude>
+    <ClInclude Include="IComponent.hpp">
+      <Filter>Header Files\core\esc\component</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.hpp">
+      <Filter>Header Files\core\esc\system</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldManager.hpp">
+      <Filter>Header Files\core\esc\system</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.hpp">
+      <Filter>Header Files\core\esc\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshData.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshService.hpp">
+      <Filter>Header Files\services</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorUtils.h">
+      <Filter>Header Files\core\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.hpp">
+      <Filter>Header Files\core\esc\component</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraControllerComponent.hpp">
+      <Filter>Header Files\core\esc\component</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraControllerSystem.hpp">
+      <Filter>Header Files\core\esc\system</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSystem.hpp">
+      <Filter>Header Files\core\esc\system</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentFactory.h">
+      <Filter>Header Files\core\esc\component</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.hpp">
+      <Filter>Header Files\core\gui\framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadEntity.hpp">
+      <Filter>Header Files\core\gui\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="GLMesh.hpp">
+      <Filter>Header Files\core\gui\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\core\gui\material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderBinder.hpp">
+      <Filter>Header Files\core\gui\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.hpp">
+      <Filter>Header Files\core\gui\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderTypes.h">
+      <Filter>Header Files\core\gui\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.hpp">
+      <Filter>Header Files\core\gui\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.hpp">
+      <Filter>Header Files\core\gui\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.hpp">
+      <Filter>Header Files\core\gui\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="LightProcessor.hpp">
+      <Filter>Header Files\core\esc\process</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableProcessor.hpp">
+      <Filter>Header Files\core\esc\process</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneSerializer.h">
+      <Filter>Header Files\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Attenuation.h">
+      <Filter>Header Files\core\gui\light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\core\gui\light</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialIO.h">
+      <Filter>Header Files\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.hpp">
+      <Filter>Header Files\core\esc\process</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowService.hpp">
+      <Filter>Header Files\services</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectWindow.hpp">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorService.hpp">
+      <Filter>Header Files\services</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshDataSerializer.hpp">
+      <Filter>Header Files\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialEditorWindow.hpp">
+      <Filter>Header Files\windows\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialManager.hpp">
+      <Filter>Header Files\core\gui\material</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent .hpp">
+      <Filter>Header Files\core\esc\component</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.hpp">
+      <Filter>Header Files\core\esc\system</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsService.hpp">
+      <Filter>Header Files\core\esc\process</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\folder.png">
+      <Filter>Resource Files\assets</Filter>
+    </Image>
+    <Image Include="assets\geometry.png">
+      <Filter>Resource Files\assets</Filter>
+    </Image>
+    <Image Include="assets\image.png">
+      <Filter>Resource Files\assets</Filter>
+    </Image>
+    <Image Include="assets\material.png">
+      <Filter>Resource Files\assets</Filter>
+    </Image>
+    <Image Include="assets\script.png">
+      <Filter>Resource Files\assets</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

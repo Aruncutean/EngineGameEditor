@@ -9,7 +9,6 @@
 			 xmlns:local="clr-namespace:EditorAvalonia.views.editor"
 		     Background="#181818"
 			 >
-
 	<Border Background="#303030"
 		   CornerRadius="8"
 		   BorderThickness="1"

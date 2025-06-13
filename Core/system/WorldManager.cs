@@ -1,6 +1,7 @@
 ﻿using Core.component;
 using Core.entity;
 using Core.graphics.framebuffer;
+using Core.graphics.mesh;
 using Core.graphics.shader;
 using Core.IO;
 using Core.models;
@@ -10,6 +11,7 @@ using Silk.NET.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -22,7 +24,7 @@ namespace Core.system
         private World _currentWorld;
         private RenderSystem _renderSystem = new();
         private ProjectData _projectData;
-        private Entity _cameraEntity;
+        public Entity _cameraEntity;
 
         private EditorGizmoSystem _editorGizmoSystem;
         public CameraControllerSystem _cameraControllerSystem;
@@ -68,8 +70,6 @@ namespace Core.system
             gl.Enable(GLEnum.Blend);
             gl.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
 
-            gl?.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            gl?.ClearColor(0.247f, 0.247f, 0.247f, 1.0f);
         }
 
         public void Resize(int width, int height)
@@ -134,13 +134,17 @@ namespace Core.system
 
                 if (_currentWorld != null)
                 {
-                    if (isEditMode == true)
-                    {
-                        _editorGizmoSystem.Render(_currentWorld);
-                    }
+
+                    _editorGizmoSystem.Render(_currentWorld);
+
                     _renderSystem.Render(_currentWorld, gl);
                 }
             }
+        }
+
+        public void dispone()
+        {
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.component;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace Core.models
         [JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
+    
+        [JsonConverter(typeof(AssetTypeConverter))]
         [JsonPropertyName("type")]
         public AssetType Type { get; set; }
 
@@ -36,7 +39,7 @@ namespace Core.models
 
     public enum AssetType
     {
-        Mesh, Texture, Folder, Material
+        Mesh, Texture, Folder, Material, Script
 
     }
 

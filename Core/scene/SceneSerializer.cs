@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.component;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Core.scene
             var json = JsonSerializer.Serialize(scene, new JsonSerializerOptions
             {
                 WriteIndented = true,
-                Converters = { new ComponentConverter() }
+                Converters = { new ComponentConverter(), new UInt32ListConverter(), new LightTypeConverter(), }
             });
 
             File.WriteAllText(path, json);
@@ -26,7 +27,7 @@ namespace Core.scene
             var json = File.ReadAllText(path);
             return JsonSerializer.Deserialize<World>(json, new JsonSerializerOptions
             {
-                Converters = { new ComponentConverter() }
+                Converters = { new ComponentConverter(), new UInt32ListConverter(), new LightTypeConverter(), }
             })!;
         }
     }

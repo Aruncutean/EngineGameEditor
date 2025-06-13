@@ -15,7 +15,6 @@ namespace EditorAvalonia.service
     public class AssetsService
     {
         private string assetPathFile = "assets\\assets.json";
-        private string meshPath = "assets\\mesh";
 
         private AssetManager assetManager;
         public AssetsService()
@@ -67,7 +66,7 @@ namespace EditorAvalonia.service
             assetManager.saveAsset(Path.Combine(projectPath, assetPathFile), StoreService.GetInstance().AssetCollection);
         }
 
-        public void SaveMesh(MeshData meshData)
+        public AssetItem SaveMesh(MeshData meshData, string path = "assets")
         {
             checkPath();
             var storeService = StoreService.GetInstance();
@@ -77,7 +76,7 @@ namespace EditorAvalonia.service
                 throw new InvalidOperationException("ProjectInfo or its Path is null.");
             }
 
-            var meshPath = Path.Combine(projectPath, this.meshPath);
+            var meshPath = Path.Combine(projectPath, path);
             assetManager.SaveMesh(Path.Combine(meshPath, meshData.Id + ".mesh"), meshData);
 
             if (storeService.AssetCollection == null)
@@ -92,10 +91,12 @@ namespace EditorAvalonia.service
             {
                 Name = "Cub",
                 Type = AssetType.Mesh,
-                Path = Path.Combine(meshPath, meshData.Id + ".mesh")
+                Path = Path.Combine(meshPath, meshData.Id + ".mesh"),
+                BaseDirector = path,
             };
             storeService.AssetCollection.Assets.Add(assetItem);
             SaveAssets();
+            return assetItem;
         }
 
         public MeshData LoadMesh(string path)

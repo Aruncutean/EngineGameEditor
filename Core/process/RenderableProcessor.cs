@@ -7,6 +7,7 @@ using Core.graphics.material.texture;
 using Core.graphics.shader;
 using Core.scene;
 using Silk.NET.OpenGL;
+using Silk.NET.Windowing;
 using System.Numerics;
 
 namespace Core.process
@@ -29,7 +30,6 @@ namespace Core.process
             var materialComponent = entity.GetComponent<MaterialComponent>();
 
             if (transformComponent == null || meshComponent == null || materialComponent == null) return;
-
 
             var material = MaterialManager.Get(materialComponent.MaterialID);
             if (material == null) return;
@@ -63,6 +63,7 @@ namespace Core.process
             }
             if (material is MaterialPhong phong)
             {
+
                 binder.SetVec3("viewPos", camera.Position);
                 binder.SetInt("material.ambientMap", 0);
                 binder.SetInt("material.diffuseMap", 1);
@@ -70,13 +71,14 @@ namespace Core.process
 
                 if (phong.Ambient.IsTexture == false)
                 {
+                    Console.WriteLine("material.ambientColor");
                     binder.SetVec3("material.ambientColor", ColorUtils.HexToVector3(phong.Ambient.Color));
                     binder.SetInt("material.useAmbientMap", 0);
                 }
                 else
                 {
                     binder.SetInt("material.useAmbientMap", 1);
-
+                    Console.WriteLine("material.useAmbientMap");
                     gl.ActiveTexture(TextureUnit.Texture0);
                     gl.BindTexture(TextureTarget.Texture2D, TextureManager.Get(phong.Ambient.TexturePath, gl));
                 }
@@ -109,13 +111,19 @@ namespace Core.process
 
                 binder.SetFloat("material.shininess", phong.Shininess);
                 int i = 0;
+
+                Console.WriteLine("Lights :" + lights.Count);
                 foreach (var light in lights)
                 {
                     var lightComp = light.GetComponent<LightComponent>();
                     var lightTransform = light.GetComponent<TransformComponent>();
 
+                    Console.WriteLine("lightComp :" + lightComp.Type);
+
                     if (lightComp.LightBase is LightDirectional lightDirectional)
                     {
+                        Console.WriteLine("dirLight :" + lightDirectional.Color);
+                        Console.WriteLine("dirLight :" + lightDirectional.Intensity);
                         var direction = Vector3.Normalize(transformComponent.Position - lightTransform.Position);
                         binder.SetVec3("dirLight.direction", direction);
                         binder.SetVec3("dirLight.color", lightDirectional.Color);
@@ -139,6 +147,7 @@ namespace Core.process
             }
             else if (material is MaterialPBR pbr)
             {
+
                 foreach (var light in lights)
                 {
                     var lightComp = light.GetComponent<LightComponent>();

@@ -19,9 +19,9 @@ namespace Core.graphics.shader
         public static void LoadShaders(GL gl)
         {
             Init(gl);
-            Load(ShaderTypes.Basic, "shader/basic.vert.glsl", "shader/basic.frag.glsl");
-            Load(ShaderTypes.gizmo, "shader/gizmo.vert.glsl", "shader/gizmo.frag.glsl");
-            Load(ShaderTypes.Phong, "shader/phong.vert.glsl", "shader/phong.frag.glsl");
+            Load(ShaderTypes.Basic, "shader/basic.vert", "shader/basic.frag");
+            Load(ShaderTypes.gizmo, "shader/gizmo.vert", "shader/gizmo.frag");
+            Load(ShaderTypes.Phong, "shader/phong.vert", "shader/phong.frag");
         }
 
         private static uint Load(ShaderTypes id, string vertexPath, string fragmentPath)

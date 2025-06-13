@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Core.graphics.light
 {
-
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
     [JsonDerivedType(typeof(LightPoint), "LightPoint")]
     [JsonDerivedType(typeof(LightDirectional), "LightDirectional")]

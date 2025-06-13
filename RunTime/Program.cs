@@ -17,6 +17,7 @@ using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System;
+using Core.process;
 
 namespace RunTime
 {
@@ -56,10 +57,8 @@ namespace RunTime
                 }
             }
 
-            path ??= Directory.GetCurrentDirectory();
+            //  path ??= Directory.GetCurrentDirectory();
 
-
-            path = "C:\\Users\\arunc\\Desktop\\New folder (2)\\Project";
             Console.WriteLine($"Project path: {path}");
             Console.WriteLine($"Edit mode: {isEditMode}");
             Console.WriteLine($"Scene path: {curentScene}");
@@ -122,7 +121,8 @@ namespace RunTime
         private static void OnLoad()
         {
             gl = GL.GetApi(window);
-
+            _input = window.CreateInput();
+            Input.Init(_input);
             WindowsService.Instance.Width = 800;
             WindowsService.Instance.Height = 600;
 
@@ -137,51 +137,6 @@ namespace RunTime
             }
 
 
-            var input = window.CreateInput();
-
-
-            foreach (var keyboard in input.Keyboards)
-            {
-                keyboard.KeyDown += (kb, key, code) =>
-                {
-
-                    _worldSystem._cameraControllerSystem?.OnKeyDown(key);
-
-                    if (key == Key.Escape)
-                        window.Close();
-                };
-
-                keyboard.KeyUp += (kb, key, code) =>
-                {
-                    _worldSystem._cameraControllerSystem?.OnKeyUp(key);
-                };
-            }
-
-            foreach (var mouseDevice in input.Mice)
-            {
-
-                mouseDevice.MouseUp += (m, btn) =>
-                {
-                    bool isLeftButton = btn == MouseButton.Left;
-                    _worldSystem._cameraControllerSystem?.mousePresss(!isLeftButton);
-                };
-
-                mouseDevice.MouseDown += (m, btn) =>
-                {
-                    bool isLeftButton = btn == MouseButton.Left;
-                    _worldSystem._cameraControllerSystem?.mousePresss(isLeftButton);
-                };
-
-                mouseDevice.Scroll += (m, scroll) =>
-                {
-                    Console.WriteLine($"Scroll: {scroll}");
-                };
-
-                mouseDevice.MouseMove += (m, pos) =>
-                {
-                    _worldSystem._cameraControllerSystem?.OnMouseMove(new Vector2((float)pos.X, (float)pos.Y));
-                };
-            }
         }
 
         private static void OnRender(double delta)

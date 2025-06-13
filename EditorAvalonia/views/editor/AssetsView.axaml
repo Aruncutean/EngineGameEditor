@@ -26,7 +26,8 @@
 				<MenuItem Command="{Binding AddFoldern}" Header="New Foldern" />
 				<MenuItem Command="{Binding AddNewMaterial}" Header="New Material" />
 				<MenuItem Command="{Binding AddNewTexture}" Header="New Texture" />
-				<MenuItem Header="New Mash" />
+				<MenuItem Command="{Binding AddNewMash}" Header="New Mash" />
+				<MenuItem Command="{Binding AddNewScript}" Header="New Script" />
 			</ContextMenu>
 		</Border.ContextMenu>
 		<StackPanel>
@@ -68,7 +69,7 @@
 					</ListBox.ItemsPanel>
 					<ListBox.ItemTemplate>
 						<DataTemplate>
-							<StackPanel Width="80" HorizontalAlignment="Center">
+							<StackPanel Width="40" HorizontalAlignment="Center">
 								<Image Source="{Binding Icon}" />
 								<TextBox
                                     HorizontalAlignment="Center"

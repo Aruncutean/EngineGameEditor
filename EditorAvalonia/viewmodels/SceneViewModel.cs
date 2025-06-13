@@ -74,6 +74,21 @@ namespace EditorAvalonia.viewmodels
             }
         }
 
+        public void CloseWindows()
+        {
+            CloseThisWindow?.Invoke();
+        }
+
+        public void CloseProject()
+        {
+
+            ProjectPage projectPage = new ProjectPage();
+            projectPage.Show();
+            CloseThisWindow?.Invoke();
+        }
+
+
+
         public void SaveScene()
         {
 

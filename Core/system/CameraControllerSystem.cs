@@ -1,5 +1,6 @@
 ﻿using Core.component;
 using Core.entity;
+using Core.process;
 using Core.scene;
 using Silk.NET.Input;
 using System;
@@ -14,7 +15,6 @@ namespace Core.system
 {
     public class CameraControllerSystem
     {
-        private readonly HashSet<Key> _keys = new();
         private Vector2 _lastMousePos;
         private bool _firstMove = true;
         private float _yaw = -90f;
@@ -31,6 +31,29 @@ namespace Core.system
         {
             transform = cameraEntity.GetComponent<TransformComponent>();
             cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+
+
+            Input.MouseClicked += (MouseButton1) =>
+            {
+                if (MouseButton1 == MouseButton.Left)
+                {
+                    mousePresssBool = true;
+                }
+
+            };
+
+            Input.MouseReleased += (MouseButton1) =>
+            {
+                if (MouseButton1 == MouseButton.Left)
+                {
+                    mousePresssBool = false;
+                }
+            };
+
+            Input.MouseMove += (Vector2 newPos) =>
+            {
+                OnMouseMove(newPos);
+            };
         }
 
 
@@ -38,9 +61,6 @@ namespace Core.system
         {
             mousePresssBool = mouseButtonPressed;
         }
-
-        public void OnKeyDown(Key key) => _keys.Add(key);
-        public void OnKeyUp(Key key) => _keys.Remove(key);
 
         public void OnMouseMove(Vector2 newPos)
         {
@@ -85,20 +105,19 @@ namespace Core.system
         public void Update(float deltaTime)
         {
             var cameraSeed = MoveSpeed * deltaTime;
-
-            if (_keys.Contains(Key.W))
+            if (Input.KeyW == true)
             {
                 transform.Position += cameraSeed * cameraComponent.Front;
             }
-            if (_keys.Contains(Key.S))
+            if (Input.KeyS == true)
             {
                 transform.Position -= cameraSeed * cameraComponent.Front;
             }
-            if (_keys.Contains(Key.A))
+            if (Input.KeyA == true)
             {
                 transform.Position -= Vector3.Normalize(Vector3.Cross(cameraComponent.Front, cameraComponent.Up)) * cameraSeed;
             }
-            if (_keys.Contains(Key.D))
+            if (Input.KeyD == true)
             {
                 transform.Position += Vector3.Normalize(Vector3.Cross(cameraComponent.Front, cameraComponent.Up)) * cameraSeed;
             }

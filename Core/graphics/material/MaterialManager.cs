@@ -39,9 +39,11 @@ namespace Core.graphics.material
                 ProjectData projectData = DataService.Instance.ProjectData;
                 if (projectData != null)
                 {
-                    string path = Path.Combine(projectData.Path, "assets/assets.json");
+                    string path = Path.Combine(projectData.Path, "Assets/assets.json");
                     AssetManager assetManager = new AssetManager();
                     AssetCollection assetCollection = assetManager.loadAsset(path);
+
+
                     AssetItem? assetItem = assetCollection.Assets.FirstOrDefault(x => x.Id == id);
                     if (assetItem != null)
                     {

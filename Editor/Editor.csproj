@@ -1,47 +1,50 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<!-- <OutputType>WinExe</OutputType> -->
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ClickableTransparentOverlay" Version="11.1.0" />
-    <PackageReference Include="GLFW.NET" Version="0.9.7.1" />
-    <PackageReference Include="ImGui.NET" Version="1.91.6.1" />
-    <PackageReference Include="ImGuizmoSharp" Version="1.61.0" />
-    <PackageReference Include="NativeFileDialogs.Net" Version="1.2.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Silk.NET.Input.Glfw" Version="2.22.0" />
-    <PackageReference Include="Silk.NET.OpenGL" Version="2.22.0" />
-    <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.22.0" />
-    <PackageReference Include="Silk.NET.Windowing" Version="2.22.0" />
-    <PackageReference Include="Silk.NET.Windowing.Common" Version="2.22.0" />
-    <PackageReference Include="Silk.NET.Windowing.Glfw" Version="2.22.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
-    <PackageReference Include="Veldrid.ImGui" Version="5.72.0" />
-    <PackageReference Include="Vortice.Mathematics" Version="1.9.3" />
-  <None Update="ui\**\*.json">
-    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-  </None>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AssimpNet" Version="4.1.0" />
+		<PackageReference Include="ImGui.NET" Version="1.91.6.1" />
+		<PackageReference Include="NativeFileDialogNET" Version="2.0.2" />
+		<PackageReference Include="OpenTK" Version="4.9.4" />
+		<PackageReference Include="Silk.NET.Input" Version="2.22.0" />
+		<PackageReference Include="Silk.NET.OpenGL" Version="2.22.0" />
+		<PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.22.0" />
+		<PackageReference Include="Silk.NET.Windowing" Version="2.22.0" />
+		<PackageReference Include="Silk.NET.Windowing.Common" Version="2.22.0" />
+		<PackageReference Include="Silk.NET.Windowing.Glfw" Version="2.22.0" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.9" />
+		<PackageReference Include="StbImageSharp" Version="2.30.15" />
+		<PackageReference Include="Twizzle.ImGuizmo.NET" Version="1.89.4.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="view\viewMain.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="view\scena.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="view\win2.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="view\win.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Core\Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="assets\folder.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="assets\geometry.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="assets\image.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="assets\material.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="assets\script.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

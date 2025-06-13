@@ -10,6 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="ActiproSoftware.Controls.Avalonia" Version="25.1.1" />
 		<PackageReference Include="AssimpNet" Version="4.1.0" />
 		<PackageReference Include="Avalonia" Version="11.2.6" />
 		<PackageReference Include="Avalonia.Desktop" Version="11.2.6" />
@@ -22,6 +23,7 @@
 		</PackageReference>
 		<PackageReference Include="Dock.Avalonia" Version="11.2.0.2" />
 		<PackageReference Include="Dock.Model.Mvvm" Version="11.2.0.2" />
+		<PackageReference Include="ImGui.NET" Version="1.91.6.1" />
 		<PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
 
 		<PackageReference Include="ReactiveUI" Version="20.2.45" />
@@ -37,6 +39,7 @@
 		<PackageReference Include="Silk.NET.Windowing.Glfw" Version="2.22.0" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
 		<PackageReference Include="System.Reactive" Version="6.0.1" />
+		<PackageReference Include="Twizzle.ImGuizmo.NET" Version="1.89.4.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -69,6 +72,9 @@
 		<AvaloniaResource Update="assets\image.png">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</AvaloniaResource>
+		<AvaloniaResource Update="assets\script.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</AvaloniaResource>
 		<AvaloniaResource Update="assets\spotlight.png">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</AvaloniaResource>
@@ -89,5 +95,9 @@
 
 	<ItemGroup>
 		<None Include="C:\Users\arunc\Desktop\GameEditor\EditorAvalonia\.editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="components\" />
 	</ItemGroup>
 </Project>

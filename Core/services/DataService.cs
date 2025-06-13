@@ -1,4 +1,5 @@
 ﻿using Core.models;
+using Core.scene;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,11 @@ namespace Core.services
     public class DataService
     {
         private static DataService instance = null;
+        public ProjectData? ProjectData { get; set; }
+        public ProjectInfo? ProjectInfo { get; set; }
+        public SceneInfo? CurrentScene { get; set; }
 
-        public ProjectData? ProjectData;
+        public World? Scene { get; set; }
 
         public AssetCollection? AssetCollection;
 

@@ -25,9 +25,17 @@ public partial class EditorWindow : Window
 
         vm.RequestFileDialog += ShowFileDialogAsync;
 
+        vm.CloseThisWindow += CloseThisWindow;
         DialogService.Instance.window = this;
 
     }
+
+    private Task CloseThisWindow()
+    {
+        this.Close();
+        return Task.CompletedTask;
+    }
+
     private async Task<string[]?> ShowFileDialogAsync()
     {
         var dialog = new OpenFileDialog

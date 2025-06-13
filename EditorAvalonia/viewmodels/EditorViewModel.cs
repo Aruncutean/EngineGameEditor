@@ -8,6 +8,8 @@ using EditorAvalonia.runtime;
 using EditorAvalonia.service;
 using EditorAvalonia.utils;
 using EditorAvalonia.views.editor;
+using EditorAvalonia.views.project;
+using EditorAvalonia.views.scene;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,19 +24,17 @@ namespace EditorAvalonia.viewmodels
 {
     public class EditorViewModel : INotifyPropertyChanged
     {
-
-        private AssetsService _assetsService { get; set; } = new();
+        public event Func<Task>? CloseThisWindow;
 
         public event Func<Task<string[]?>>? RequestFileDialog;
 
-        public ICommand AddMeshCommand { get; set; }
         public ICommand RunCommand { get; set; }
 
         public ICommand RunAndroidCommand { get; set; }
         public EditorViewModel()
         {
 
-            AddMeshCommand = new RelayCommand(async () => await AddMesh(), CanOpenProject);
+    
             RunCommand = new RelayCommand(() => Run(), CanOpenProject);
             RunAndroidCommand = new RelayCommand(() => RunAndroid(), CanOpenProject);
 
@@ -80,6 +80,29 @@ namespace EditorAvalonia.viewmodels
             StoreService.GetInstance().AddEntity(entityLight);
         }
 
+        public void CloseWindows()
+        {
+            StoreService.GetInstance().CloseEditorRender();
+            CloseThisWindow?.Invoke();
+        }
+
+        public void CloseProject()
+        {
+            ProjectPage projectPage = new ProjectPage();
+            projectPage.Show();
+            StoreService.GetInstance().CloseEditorRender();
+            CloseThisWindow?.Invoke();
+        }
+
+        public void ChangeScene()
+        {
+            Scene scene = new Scene();
+            scene.Show();
+            StoreService.GetInstance().CloseEditorRender();
+            CloseThisWindow?.Invoke();
+        }
+
+
         public void AddSpotLight()
         {
             Entity entityLight = new Entity();
@@ -99,7 +122,7 @@ namespace EditorAvalonia.viewmodels
                     Intensity = 1.0f,
                     Range = 10.0f,
                     Cutoff = 30.0f,
-                    Direction = new Vector3(0, -1, 0) 
+                    Direction = new Vector3(0, -1, 0)
                 }
             };
 
@@ -143,21 +166,6 @@ namespace EditorAvalonia.viewmodels
             runtimeLauncher.RunProject(path);
         }
 
-        public async Task AddMesh()
-        {
-            if (RequestFileDialog is not null)
-            {
-                var result = await RequestFileDialog.Invoke();
-                if (result != null)
-                {
-                    LoadEntity loadEntity = new LoadEntity();
-                    foreach (string path in result)
-                    {
-                        _assetsService.SaveMesh(loadEntity.LoadMesh(path));
-                    }
-                }
-            }
-        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string name)

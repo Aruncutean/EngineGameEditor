@@ -22,8 +22,10 @@ namespace Core.IO
             {
                 WriteIndented = true,
                 Converters = {
+                        new UInt32ListConverter(),
                         new Vector3Converter(),
-                        new Vector2Converter()
+                        new Vector2Converter(),
+                         new LightTypeConverter(),
                     }
             });
 
@@ -37,8 +39,10 @@ namespace Core.IO
             {
                 WriteIndented = true,
                 Converters = {
+                       new UInt32ListConverter(),
                         new Vector3Converter(),
-                        new Vector2Converter()
+                        new Vector2Converter(),
+                        new LightTypeConverter(),
                     }
             })!;
         }

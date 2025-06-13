@@ -21,9 +21,9 @@
                 Header="_File">
 				<MenuItem Header="_Open..." />
 				<Separator />
-				<MenuItem Command="{Binding AddMeshCommand}" Header="_Import" />
-				<Separator />
-				<MenuItem Header="_Exit" />
+				<MenuItem Command="{Binding ChangeScene}" Header="_Change Scene" />
+				<MenuItem Command="{Binding CloseProject}" Header="_Close Project" />
+				<MenuItem Command="{Binding CloseWindows}" Header="_Exit" />
 			</MenuItem>
 			<MenuItem
                 FontSize="12"

@@ -17,7 +17,19 @@ namespace Core.assets
 
         public void saveAsset(string path, AssetCollection assetCollection)
         {
-            string newJson = JsonSerializer.Serialize(assetCollection, new JsonSerializerOptions { WriteIndented = true });
+            string newJson = JsonSerializer.Serialize(assetCollection, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Converters = {
+                        new Vector3Converter(),
+                        new Vector2Converter(),
+                        new UInt32ListConverter(),
+                        new LightTypeConverter(),
+                        new FloatConverter(),
+                        new BoolConverter(),
+                        new LightBaseConverter()
+                    }
+            });
             File.WriteAllText(path, newJson);
         }
 
@@ -25,8 +37,12 @@ namespace Core.assets
         {
             if (File.Exists(path))
             {
+                Console.WriteLine("Exist");
                 string jsonString = File.ReadAllText(path);
-                return JsonSerializer.Deserialize<AssetCollection>(jsonString) ?? new AssetCollection();
+                return JsonSerializer.Deserialize<AssetCollection>(jsonString, new JsonSerializerOptions
+                {
+                    Converters = { new UInt32ListConverter(), new LightTypeConverter(), new AssetTypeConverter() }
+                }) ?? new AssetCollection();
             }
             return new AssetCollection();
         }
@@ -38,7 +54,12 @@ namespace Core.assets
                 WriteIndented = true,
                 Converters = {
                         new Vector3Converter(),
-                        new Vector2Converter()
+                        new Vector2Converter(),
+                        new UInt32ListConverter(),
+                        new LightTypeConverter(),
+                        new FloatConverter(),
+                        new BoolConverter(),
+                        new LightBaseConverter()
                     }
             });
             File.WriteAllText(path, newJson);

@@ -1,0 +1,56 @@
+<UserControl
+    x:Class="EditorAvalonia.views.editor.EntityEditor"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:EditorAvalonia.views.editor"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+	<Grid>
+		<TabControl>
+			<TabItem>
+				<TabItem.Header>
+					<StackPanel
+                        Margin="4"
+                        Orientation="Horizontal"
+                        Spacing="8">
+						<Image
+                            Width="24"
+                            Height="24"
+                            Source="avares://EditorAvalonia/assets/cube1.png" />
+					</StackPanel>
+				</TabItem.Header>
+				<local:EntityView />
+			</TabItem>
+			<TabItem>
+				<TabItem.Header>
+					<StackPanel
+                        Margin="4"
+                        Orientation="Horizontal"
+                        Spacing="8">
+						<Image
+                            Width="24"
+                            Height="24"
+                            Source="avares://EditorAvalonia/assets/material.png" />
+					</StackPanel>
+				</TabItem.Header>
+				<local:MaterialView />
+			</TabItem>
+
+			<TabItem>
+				<TabItem.Header>
+					<StackPanel
+                        Margin="4"
+                        Orientation="Horizontal"
+                        Spacing="8">
+						<Image
+                            Width="24"
+                            Height="24"
+                            Source="avares://EditorAvalonia/assets/script.png" />
+					</StackPanel>
+				</TabItem.Header>
+				<local:ScriptView />
+			</TabItem>
+		</TabControl>
+	</Grid>
+</UserControl>

@@ -22,7 +22,7 @@ public partial class Scene : Window
 {
 
 
-    ProjectInfo projectInfo;
+    ProjectInfoE projectInfo;
     public Scene()
     {
         InitializeComponent();

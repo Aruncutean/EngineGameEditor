@@ -34,8 +34,6 @@ namespace EditorAvalonia.service
             }
         }
 
-
-
         public static DialogService Instance
         {
             get

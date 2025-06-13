@@ -1,5 +1,6 @@
 ﻿using Core.attributes;
 using Core.graphics.mesh;
+using Core.services;
 using Silk.NET.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,13 @@ namespace Core.component
         [JsonIgnore]
         public GLMesh gLMesh { get; set; }
 
-
         public void LoadMesh(GL gL)
         {
 
-            RuntimeMesh = MeshRegistry.GetMesh(MeshPath);
+            string path = DataService.Instance.ProjectData.Path;
+            Console.WriteLine(MeshPath);
+            Console.WriteLine(Path.Combine(path, MeshPath));
+            RuntimeMesh = MeshRegistry.GetMesh(Path.Combine(path, MeshPath + ".mesh.json"));
             gLMesh = new GLMesh(gL, RuntimeMesh);
 
         }

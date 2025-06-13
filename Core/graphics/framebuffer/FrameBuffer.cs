@@ -17,8 +17,8 @@ namespace Core.graphics.framebuffer
         private bool _framebufferReady = false;
 
         public uint msFBO;
-        private uint msColorTex;
-
+        public uint msColorTex;
+        public uint ColorTexture => _texture;
         public FrameBuffer(GL gl)
         {
             this._gl = gl;
@@ -58,8 +58,8 @@ namespace Core.graphics.framebuffer
                     RenderbufferTarget.Renderbuffer, msDepthRBO);
 
                 // Check if framebuffer is complete
-                if (_gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != GLEnum.FramebufferComplete)
-                    throw new Exception("Multisample framebuffer not complete!");
+                //if (_gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != GLEnum.FramebufferComplete)
+                //    throw new Exception("Multisample framebuffer not complete!");
 
                 // Normal framebuffer (rezultat final în textură)
                 _framebuffer = _gl.GenFramebuffer();
@@ -83,9 +83,17 @@ namespace Core.graphics.framebuffer
                     RenderbufferTarget.Renderbuffer, depthRBO);
 
                 if (_gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != GLEnum.FramebufferComplete)
-                    throw new Exception("Final framebuffer not complete!");
+                {
+                    _framebufferReady = false;
+                }
+                else
+                {
 
-                _framebufferReady = true;
+                    _framebufferReady = true;
+                }
+
+                //    throw new Exception("Final framebuffer not complete!");
+
 
 
                 _gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
@@ -96,7 +104,7 @@ namespace Core.graphics.framebuffer
             if (!_framebufferReady)
                 init();
             _gl.BindFramebuffer(FramebufferTarget.Framebuffer, msFBO);
-            _gl.Viewport(0, 0, (uint)width, (uint)height);
+            //_gl.Viewport(0, 0, (uint)width, (uint)height);
             _gl?.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             _gl?.ClearColor(0.247f, 0.247f, 0.247f, 1.0f);
 
@@ -118,6 +126,20 @@ namespace Core.graphics.framebuffer
                 _gl.DeleteFramebuffer(_framebuffer);
                 _framebuffer = 0;
             }
+        }
+        public void BlitToTexture()
+        {
+            _gl.BindFramebuffer(FramebufferTarget.ReadFramebuffer, msFBO);
+            _gl.BindFramebuffer(FramebufferTarget.DrawFramebuffer, _framebuffer);
+
+            _gl.BlitFramebuffer(
+                0, 0, width, height,
+                0, 0, width, height,
+                ClearBufferMask.ColorBufferBit,
+                BlitFramebufferFilter.Linear
+            );
+
+            _gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
 
     }

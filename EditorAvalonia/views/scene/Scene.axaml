@@ -13,9 +13,18 @@
     x:DataType="vm:SceneViewModel"
     Background="#181818"
     mc:Ignorable="d">
-
-	<StackPanel Margin="10">
-		<StackPanel>
+	<StackPanel>
+		<Menu DockPanel.Dock="Top">
+			<MenuItem
+                FontSize="12"
+                Foreground="White"
+                Header="_File">
+				<MenuItem Command="{Binding CloseProject}" Header="_Close Project" />
+				<Separator />
+				<MenuItem Command="{Binding CloseWindows}" Header="_Exit" />
+			</MenuItem>
+		</Menu>
+		<StackPanel Margin="10">
 			<Grid
                 Margin="10"
                 ColumnDefinitions="100,*,*"
@@ -38,27 +47,23 @@
                     Command="{Binding SaveScene}"
                     Content="Save" />
 			</Grid>
-
+			<TextBlock
+                FontSize="16"
+                FontWeight="Bold"
+                Text="Scene disponibile" />
+			<ListBox
+                x:Name="SceneList"
+                Height="300"
+                ItemsSource="{Binding Scenes}"
+                SelectedItem="{Binding SelectedScene}">
+				<ListBox.ItemTemplate>
+					<DataTemplate x:DataType="core:SceneInfo">
+						<StackPanel>
+							<TextBlock FontWeight="Bold" Text="{Binding Name}" />
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
 		</StackPanel>
-		<TextBlock
-            FontSize="16"
-            FontWeight="Bold"
-            Text="Scene disponibile" />
-		<ListBox
-            x:Name="SceneList"
-            Height="300"
-            ItemsSource="{Binding Scenes}"
-            SelectedItem="{Binding SelectedScene}">
-			<ListBox.ItemTemplate>
-				<DataTemplate x:DataType="core:SceneInfo">
-					<StackPanel>
-						<TextBlock FontWeight="Bold" Text="{Binding Name}" />
-					</StackPanel>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-
-		</ListBox>
-
-
 	</StackPanel>
 </Window>

@@ -51,10 +51,10 @@ namespace EditorAvalonia.viewmodels
             }
         }
 
-        public ObservableCollection<ProjectInfo> Projects { get; } = new();
+        public ObservableCollection<ProjectInfoE> Projects { get; } = new();
 
-        private ProjectInfo? _selectedProject;
-        public ProjectInfo? SelectedProject
+        private ProjectInfoE? _selectedProject;
+        public ProjectInfoE? SelectedProject
         {
             get => _selectedProject;
             set
@@ -77,15 +77,15 @@ namespace EditorAvalonia.viewmodels
 
         private void LoadProjects()
         {
-            List<ProjectInfo> projectInfos = _projectService.LoadProjectList();
+            List<ProjectInfoE> projectInfos = _projectService.LoadProjectList();
             Projects.Clear();
             foreach (var projectInfo in projectInfos)
             {
-                Projects.Add(new ProjectInfo(projectInfo, DeleteProject));
+                Projects.Add(new ProjectInfoE(projectInfo, DeleteProject));
             }
         }
 
-        private void DeleteProject(ProjectInfo projectInfo)
+        private void DeleteProject(ProjectInfoE projectInfo)
         {
             _projectService.removeProject(projectInfo.Name);
             Projects.Remove(projectInfo);
@@ -116,10 +116,13 @@ namespace EditorAvalonia.viewmodels
 
         public void SaveProject()
         {
-            ProjectInfo projectInfo = _projectService.CreateProject(ProjectName, PathProject);
+            ProjectInfoE projectInfo = _projectService.CreateProject(ProjectName, PathProject);
 
             StoreService.GetInstance().ProjectInfo = projectInfo;
             _projectService.loadProjectData(projectInfo.Path);
+
+            Scene scene = new Scene();
+            scene.Show();
 
             CloseThisWindow();
         }

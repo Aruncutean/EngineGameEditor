@@ -2,14 +2,15 @@
     x:Class="EditorAvalonia.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:actipro="http://schemas.actiprosoftware.com/avaloniaui"
     RequestedThemeVariant="Dark">
-	<!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
-	<Application.Resources />
-	<Application.Styles>
-		<FluentTheme />
-		<StyleInclude Source="avares://EditorAvalonia/assets/ExpanderStyle.axaml" />
-		<StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Simple/Simple.xaml" />
-	</Application.Styles>
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+    <Application.Resources />
+    <Application.Styles>
+        <actipro:ModernTheme />
+
+        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Simple/Simple.xaml" />
+    </Application.Styles>
 
 
 </Application>

@@ -24,6 +24,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Assimp;
 using Core.graphics.material;
+using EditorAvalonia.models.Mesh;
+
 
 
 namespace EditorAvalonia.viewmodels
@@ -120,6 +122,21 @@ namespace EditorAvalonia.viewmodels
             }
 
             return name;
+        }
+
+        public void AddNewMash()
+        {
+            _ = DialogService.Instance.OpenFileDialog("Dialog",
+          new[] { "png", "jpg", "jpeg" }, (result) =>
+          {
+              if (result != null)
+              {
+                  LoadEntity loadEntity = new LoadEntity();
+                  var assetsService = new AssetsService();
+                  AssetItem assetItem = assetsService.SaveMesh(loadEntity.LoadMesh(result), CurrentFolder);
+                  Assets.Add(new AssetItemView(assetItem));
+              }
+          });
         }
 
         public void AddNewTexture()
@@ -255,6 +272,44 @@ namespace EditorAvalonia.viewmodels
 
             AssetsService assetsService = new AssetsService();
             assetsService.SaveAssets();
+        }
+
+
+        public void AddNewScript()
+        {
+            ScriptWindows scriptWindow = new ScriptWindows();
+            scriptWindow.Show();
+
+            scriptWindow.SaveScript += () =>
+            {
+                var scriptName = GetUniqueFolderName(CurrentFolder, scriptWindow.ScriptName);
+                var scriptPath = Path.Combine(CurrentFolder, $"{scriptName}.cs");
+                var assetItem = new AssetItem
+                {
+                    Name = scriptName,
+                    Type = AssetType.Script,
+                    Path = scriptPath,
+                    BaseDirector = CurrentFolder
+                };
+
+                var assetCollection = StoreService.GetInstance().AssetCollection;
+                if (assetCollection?.Assets != null)
+                {
+                    assetCollection.Assets.Add(assetItem);
+                    var assetItemView = new AssetItemView(assetItem);
+                    Assets.Add(assetItemView);
+                }
+
+                AssetsService assetsService = new AssetsService();
+                assetsService.SaveAssets();
+
+                ScriptService scriptService = new ScriptService();
+                scriptService.AddNewScrips(Path.Combine(StoreService.GetInstance().ProjectData.Path,"script"), scriptWindow.ScriptName);
+
+                scriptWindow.Close();
+            };
+
+
         }
 
 

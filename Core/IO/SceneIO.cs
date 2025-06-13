@@ -22,7 +22,9 @@ namespace Core.IO
                 Converters = {
                     new Vector3Converter(),
                     new Vector2Converter(),
-                    new ComponentConverter()
+                    new ComponentConverter(),
+                       new UInt32ListConverter(),
+                       new LightTypeConverter(),
                 }
             });
             File.WriteAllText(path, json);
@@ -36,7 +38,9 @@ namespace Core.IO
                 Converters = {
                     new ComponentConverter(),
                     new Vector3Converter(),
-                    new Vector2Converter()
+                       new UInt32ListConverter(),
+                    new Vector2Converter(),
+                       new LightTypeConverter(),
                 }
             }) ?? new();
         }

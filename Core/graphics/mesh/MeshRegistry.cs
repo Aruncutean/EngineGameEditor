@@ -20,7 +20,7 @@ namespace Core.graphics.mesh
             var json = File.ReadAllText(meshPath);
             var options = new JsonSerializerOptions
             {
-                Converters = { new Vector3Converter(), new Vector2Converter() }
+                Converters = { new Vector3Converter(), new Vector2Converter(), new UInt32ListConverter() }
             };
             mesh = JsonSerializer.Deserialize<MeshData>(json, options)!;
 
